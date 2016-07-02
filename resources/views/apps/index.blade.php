@@ -20,10 +20,7 @@
                 <td>{{ $app->name }}</td>
                 <td>{{ $app->latest_version }}</td>
                 <td>
-                    <div class="btn-group">
-                        <a href="{{ $app->download_url }}" class="btn btn-sm btn-info"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
-                        <a href="{{ $app->website_url }}" class="btn btn-sm btn-info"><i class="fa fa-globe" aria-hidden="true"></i> Website</a>
-                    </div>
+                    <a href="{{ action('AppController@refresh', ['app' => $app]) }}" class="btn btn-sm btn-warning"><i class="fa fa-refresh" aria-hidden="true"></i> Update Version</a>
                     <a href="{{ action('AppController@edit', ['app' => $app]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
                     <form action="{{ action('AppController@destroy', ['app' => $app]) }}" method="POST" style="display: inline-block;">
                         {{ csrf_field() }}
