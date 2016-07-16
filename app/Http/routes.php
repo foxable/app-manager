@@ -12,16 +12,18 @@
 */
 
 Route::get('/', function() {
-    return redirect('/apps');
+    return redirect('/all-apps');
  });
 
  Route::model('app', 'App\App');
  
+ Route::controller('/all-apps', 'AllAppsController');
+ 
  Route::get('/apps/{app}/refresh', 'AppController@refresh');
  
- Route::resource('apps', 'AppController', [
+ Route::resource('apps', 'AppsResourceController', [
      'parameters' => 'singular',
-     'except' => ['show']
+     'except' => ['edit']
  ]);
 
 Route::auth();

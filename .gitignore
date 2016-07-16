@@ -1,5 +1,6 @@
 vendor/
 node_modules/
+typings/
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -16,3 +17,4 @@ bootstrap/cache/
 /_ide_helper.php
 /config/database.php
 nbproject
+/resources/assets/javascript/
