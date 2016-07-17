@@ -10,9 +10,9 @@ export class AppService
 {
     private appsUrl = 'apps';
     
-    constructor(private http: Http) { }
+    public constructor(private http: Http) { }
     
-    getAllApps(): Promise<App[]>
+    public getAllApps(): Promise<App[]>
     {
         return this.http.get(this.appsUrl)
             .toPromise()
@@ -20,12 +20,12 @@ export class AppService
             .catch(this.handleError);
     }
     
-    getApp(appId: number): Promise<App>
+    public getApp(appId: number): Promise<App>
     {
         return Promise.resolve(null);
     }
     
-    createApp(app: App): Promise<App>
+    public createApp(app: App): Promise<App>
     {
         const headers = new Headers({
             'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ export class AppService
              .catch(this.handleError);
     }
     
-    updateApp(appId: number, app: App): Promise<App>
+    public updateApp(appId: number, app: App): Promise<App>
     {
         const headers = new Headers({
             'Content-Type': 'application/json'
@@ -53,12 +53,12 @@ export class AppService
              .catch(this.handleError);
     }
     
-    saveApp(app: App): Promise<App>
+    public saveApp(app: App): Promise<App>
     {
         return app.id ? this.updateApp(app.id, app) : this.createApp(app);
     }
     
-    deleteApp(appId: number): Promise<App>
+    public deleteApp(appId: number): Promise<App>
     {
         const headers = new Headers({
             'Content-Type': 'application/json'

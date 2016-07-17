@@ -13,9 +13,7 @@ export class AllAppsComponent implements OnInit
 {
     public apps: App[] = [];
     
-    constructor (private appService: AppService)
-    {        
-    }
+    public constructor (private appService: AppService) { }
     
     private getApps(): void
     {
