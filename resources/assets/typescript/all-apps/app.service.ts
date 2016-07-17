@@ -16,7 +16,7 @@ export class AppService
     {
         return this.http.get(this.appsUrl)
             .toPromise()
-            .then(response => response.json().data)
+            .then(response => response.json())
             .catch(this.handleError);
     }
     
@@ -35,7 +35,7 @@ export class AppService
         return this.http
              .post(url, JSON.stringify(app), { headers: headers })
              .toPromise()
-             .then(response => response.json().data)
+             .then(response => response.json())
              .catch(this.handleError);
     }
     
@@ -49,7 +49,7 @@ export class AppService
         return this.http
              .put(url, JSON.stringify(null), { headers: headers })
              .toPromise()
-             .then(response => response.json().data)
+             .then(response => response.json())
              .catch(this.handleError);
     }
     
@@ -68,7 +68,7 @@ export class AppService
         return this.http
              .delete(url, { headers: headers })
              .toPromise()
-             .then(response => response.json().data)
+             .then(response => response.json())
              .catch(this.handleError);
     }
     

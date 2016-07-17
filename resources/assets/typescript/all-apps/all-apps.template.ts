@@ -1,10 +1,10 @@
 export const allAppsTemplate = `
-    <div class="container" ng-controller="AppsController">
+    <div class="container">
         <h1>All Applications</h1>
-        <button class="btn btn-sm btn-primary" ng-click="openCreateAppModal()">
+        <button class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Application
         </button>
-        <table class="table table-striped table-hover" ng-hide="apps.length === 0">
+        <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>Application</th>
@@ -13,7 +13,7 @@ export const allAppsTemplate = `
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="app in apps">
+                <tr *ngFor="let app of apps">
                     <td>{{ app.name }}</td>
                     <td>{{ app.latest_version }}</td>
                     <td>
