@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { App } from './app';
 import { AppService } from './app.service';
-import { allAppsTemplate } from './all-apps.template';
+import { CreateAppComponent } from './create-app.component';
 
 @Component({
   selector: 'all-apps',
-  template: allAppsTemplate,
-  providers: [AppService]
+  templateUrl: './all-apps.html',
+  providers: [AppService],
+  directives: [CreateAppComponent]
 })
 export class AllAppsComponent implements OnInit
 {

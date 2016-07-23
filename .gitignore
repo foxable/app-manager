@@ -18,3 +18,4 @@ bootstrap/cache/
 /config/database.php
 nbproject
 /resources/assets/javascript/
+/.tmp

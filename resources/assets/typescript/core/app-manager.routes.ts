@@ -13,6 +13,6 @@ const routes: RouterConfig = [
     }
 ];
 
-export const APP_MANAGER_ROUTER_PROVIDERS = [
+export const ROUTER_PROVIDERS = [
     provideRouter(routes)
 ];

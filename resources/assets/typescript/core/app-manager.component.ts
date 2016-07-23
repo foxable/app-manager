@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 
-import { appManagerTemplate } from './app-manager.template';
 import { AllAppsComponent } from '../all-apps/all-apps.component';
 
 @Component({
     selector: 'app-manager',
-    template: appManagerTemplate,
+    templateUrl: './app-manager.html',
     directives: [ROUTER_DIRECTIVES],
     precompile: [AllAppsComponent]
 })
 export class AppManagerComponent
 {
+    public viewContainerRef: ViewContainerRef;
+    
+    public constructor(viewContainerRef: ViewContainerRef)
+    {
+        this.viewContainerRef = viewContainerRef;
+    }
 }

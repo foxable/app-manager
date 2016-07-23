@@ -72,11 +72,14 @@
     <script src="{{ asset('assets/vendor/core-js/shim.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/zone.js/zone.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/reflect-metadata/Reflect.js') }}"></script>
-    <script src="{{ asset('assets/vendor/systemjs/system.js') }}"></script>
+    <script src="{{ asset('assets/vendor/systemjs/system.js') }}"></script>    
     <!-- 2. Configure SystemJS -->
     <script src="{{ asset('assets/js/system.config.js') }}"></script>
+    <!--<script src="{{ asset('assets/vendor/ng2-bootstrap/ng2-bootstrap.min.js') }}"></script>-->
+    <script src="{{ asset('assets/js/dependencies.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/app-manager.bundle.js') }}"></script>
     <script type="text/javascript">
-        System.import('app-manager/bootstrap').catch(function(err){ console.error(err); });
+        System.import('app-manager/core/bootstrap.js').catch(function(err){ console.error(err); });
     </script>
 </body>
 </html>
