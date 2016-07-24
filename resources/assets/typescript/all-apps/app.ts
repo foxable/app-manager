@@ -1,9 +1,9 @@
 export class App
 {
-    id: number;
-    name: string;
-    latestVersion: string;
-    websiteUrl: string;
-    downloadUrl: string;
-    versionProvider: string;
+    public id: number;
+    public name: string;
+    public latestVersion: string;
+    public websiteUrl: string;
+    public downloadUrl: string;
+    public versionProvider: string;
 }

@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\App;
-use App\HTML5VersionProvider;
+use App\Html5VersionProvider;
 use Illuminate\Http\Request;
 
 class AppsResourceController extends Controller
 {
-    private $defaultVersionProvider = 'none';
     private $availableVersionProviders = [
         'none' => 'None',
         'html5' => 'HTML5'
@@ -44,10 +43,12 @@ class AppsResourceController extends Controller
             'app.websiteUrl' => 'required|url|max:255',
             'app.downloadUrl' => 'required|url|max:255',
             'app.versionProvider' => 'required|in:none,html5',
-            'serviceProvider.url' => 'url|max:255',
-            'serviceProvider.xpath' => 'max:255',
-            'serviceProvider.regex' => 'max:255'
+            'versionProvider.url' => 'url|max:255',
+            'versionProvider.xpath' => 'max:255',
+            'versionProvider.regex' => 'max:255'
         ]);
+        
+        return response()->json([ 'error' => 'error!!!']);
         
         $app = new App();
         $app->name = $request->app['name'];
@@ -58,11 +59,11 @@ class AppsResourceController extends Controller
         
         if ($request->app['versionProvider'] === 'html5')
         {
-            $versionProvider = new HTML5VersionProvider();
+            $versionProvider = new Html5VersionProvider();
             $versionProvider->app_id = $app->id;
-            $versionProvider->provider_url = $request->html5VersionProvider['url'];
-            $versionProvider->xpath = $request->html5VersionProvider['xpath'];
-            $versionProvider->regex = $request->html5VersionProvider['regex'];
+            $versionProvider->provider_url = $request->versionProvider['url'];
+            $versionProvider->xpath = $request->versionProvider['xpath'];
+            $versionProvider->regex = $request->versionProvider['regex'];
             $versionProvider->save();
         }        
 

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Masterminds\HTML5;
 
-class HTML5VersionProvider extends Model
+class Html5VersionProvider extends Model
 {
     protected $table = 'apps_html5_version_providers';
     
