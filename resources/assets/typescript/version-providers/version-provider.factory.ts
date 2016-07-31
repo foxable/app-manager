@@ -1,23 +1,20 @@
 import { VersionProvider } from './version-provider';
-import { EmptyVersionProvider } from './empty-version-provider';
+import { StaticVersionProvider } from './static-version-provider';
 import { Html5VersionProvider } from './html5-version-provider';
 
-export interface VersionProviderFactory
-{
-    id: string;
-    name: string;
-    create(): VersionProvider;
-}
-
-export const VERSION_PROVIDERS: VersionProviderFactory[] = [
+export const VERSION_PROVIDERS: { id: string; name: string; }[] = [
     {
-        id: 'none',
-        name: 'None',
-        create: () => new EmptyVersionProvider()
+        id: 'static',
+        name: 'Static'
     },
     {
         id: 'html5',
-        name: 'HTML5',
-        create: () => new Html5VersionProvider('', '', '')
+        name: 'HTML5'
     }
 ];
+
+export const VERSION_PROVIDER_FACTORY: { [id: string]: () => VersionProvider; } =
+{
+    static: () => new StaticVersionProvider(''),
+    html5: () => new Html5VersionProvider('', '', '')
+};

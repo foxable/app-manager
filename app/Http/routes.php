@@ -23,7 +23,7 @@ Route::get('/', function() {
  
  Route::resource('apps', 'AppsResourceController', [
      'parameters' => 'singular',
-     'except' => ['edit']
+     'except' => ['create', 'edit']
  ]);
 
 Route::auth();

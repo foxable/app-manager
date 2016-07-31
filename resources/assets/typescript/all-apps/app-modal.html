@@ -2,12 +2,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add Application</h3>        
+                <h3 class="modal-title">{{ title }}</h3>        
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger" *ngIf="errors.length > 0">
                     <ul *ngFor="let errorsByField of errors">
-                        <li *ngFor="let error of errorsByField.errors">{{error}}</li>
+                        <li *ngFor="let error of errorsByField.errors">{{ error }}</li>
                     </ul>
                 </div>
                 <tabset>
@@ -38,28 +38,38 @@
                             <div class="form-group">
                                 <label for="version_provider" class="col-sm-3 control-label">Version Provider</label>
                                 <div class="col-sm-6">
-                                    <select type="text" id="version_provider" class="form-control" [(ngModel)]="app.versionProvider" (ngModelChange)="setVersionProvider($event)">
+                                    <select type="text" id="version_provider" class="form-control" [(ngModel)]="app.versionProvider.type" (ngModelChange)="changeVersionProvider($event)">
                                         <option *ngFor="let versionProvider of versionProviders" [value]="versionProvider.id">{{versionProvider.name}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <div *ngIf="app.versionProvider === 'html5'">
+                            <!-- static version provider -->
+                            <div *ngIf="app.versionProvider.type === 'static'">
+                                <div class="form-group">
+                                    <label for="latest_version" class="col-sm-3 control-label">Latest Version</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="latest_version" class="form-control" [(ngModel)]="app.versionProvider.latestVersion" (ngModelChange)="changeLatestVersion($event)"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- HTML5 version provider -->
+                            <div *ngIf="app.versionProvider.type === 'html5'">
                                 <div class="form-group">
                                     <label for="html5provider_url" class="col-sm-3 control-label">Provider URL</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="html5provider_url" class="form-control" [(ngModel)]="versionProvider.url" />
+                                        <input type="text" id="html5provider_url" class="form-control" [(ngModel)]="app.versionProvider.url" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="html5provider_xpath" class="col-sm-3 control-label">XPath Selector</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="html5provider_xpath" class="form-control" [(ngModel)]="versionProvider.xpath" />
+                                        <input type="text" id="html5provider_xpath" class="form-control" [(ngModel)]="app.versionProvider.xpath" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="html5provider_regex" class="col-sm-3 control-label">RegExp</label>
                                     <div class="col-sm-6">
-                                        <input type="text"  id="html5provider_regex" class="form-control" [(ngModel)]="versionProvider.regex" />
+                                        <input type="text"  id="html5provider_regex" class="form-control" [(ngModel)]="app.versionProvider.regex" />
                                     </div>
                                 </div>
                             </div>

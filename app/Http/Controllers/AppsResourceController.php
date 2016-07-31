@@ -24,93 +24,50 @@ class AppsResourceController extends Controller
         return App::orderBy('name', 'asc')->get()->toJson();
     }
     
-    public function create()
-    {
-        return view('apps.create', [
-            'availableVersionProviders' => $this->availableVersionProviders
-        ]);
-    }
-    
     public function show(App $app)
-    {
+    {        
         return $app->toJson();
     }
     
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'app.name' => 'required|unique:apps,name|max:255',
-            'app.websiteUrl' => 'required|url|max:255',
-            'app.downloadUrl' => 'required|url|max:255',
-            'app.versionProvider' => 'required|in:none,html5',
-            'versionProvider.url' => 'url|max:255',
-            'versionProvider.xpath' => 'max:255',
-            'versionProvider.regex' => 'max:255'
-        ]);
-        
-        return response()->json([ 'error' => 'error!!!']);
+        $this->validateApp($request);
         
         $app = new App();
-        $app->name = $request->app['name'];
-        $app->website_url = $request->app['websiteUrl'];
-        $app->download_url = $request->app['downloadUrl'];
-        $app->version_provider = $request->app['versionProvider'];
-        $app->save();
-        
-        if ($request->app['versionProvider'] === 'html5')
-        {
-            $versionProvider = new Html5VersionProvider();
-            $versionProvider->app_id = $app->id;
-            $versionProvider->provider_url = $request->versionProvider['url'];
-            $versionProvider->xpath = $request->versionProvider['xpath'];
-            $versionProvider->regex = $request->versionProvider['regex'];
-            $versionProvider->save();
-        }        
+        $app->name = $request->name;
+        $app->websiteUrl = $request->websiteUrl;
+        $app->downloadUrl = $request->downloadUrl;
+        $app->versionProvider = (object) $request->versionProvider;
+        $app->save();      
 
-        return response()->json();
+        return $app->toJson();
     }
     
     public function update(Request $request, App $app)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:apps,name,'.$app->id.'|max:255',
-            'latest_version' => 'required|max:255',
-            'website_url' => 'required|url|max:255',
-            'download_url' => 'required|url|max:255',
-            'version_provider' => 'required|in:none,html5',
-            'provider_url' => 'required|url|max:255',
-            'provider_xpath' => 'required|max:255',
-            'provider_regex' => 'required|max:255'
-        ]);
-        
-        $previousVersionProviderName = $app->version_provider;
-        $previousVersionProvider = $app->versionProvider();
-        
+        $this->validateApp($request, $app);
+
         $app->name = $request->name;
-        $app->latest_version = $request->latest_version;
-        $app->website_url = $request->website_url;
-        $app->download_url = $request->download_url;
-        $app->version_provider = $request->version_provider;
+        $app->websiteUrl = $request->websiteUrl;
+        $app->downloadUrl = $request->downloadUrl;
+        $app->versionProvider = (object) $request->versionProvider;
         $app->save();
         
-        if ($app->version_provider !== $previousVersionProviderName
-         && $previousVersionProviderName !== 'none')
-        {
-            $previousVersionProvider->delete();
-        }
-        
-        if ($app->version_provider === 'html5')
-        {
-            $versionProvider = $previousVersionProviderName === 'html5' ? $previousVersionProvider : new HTML5VersionProvider();
-            $versionProvider->app_id = $app->id;
-            $versionProvider->provider_url = $request->provider_url;
-            $versionProvider->xpath = $request->provider_xpath;
-            $versionProvider->regex = $request->provider_regex;
-            $versionProvider->save();
-        }        
-        
-        
-        return redirect()->action('AppController@index');
+        return $app->toJson();
+    }
+    
+    private function validateApp(Request $request, App $app = null)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255|unique:apps,name' . ($app ? ',' . $app->id : ''),
+            'websiteUrl' => 'required|url|max:255',
+            'downloadUrl' => 'required|url|max:255',
+            'versionProvider.type' => 'required|in:static,html5',
+            'versionProvider.latestVersion' => 'required_if:versionProvider.type,static|max:255',
+            'versionProvider.url' => 'required_if:versionProvider.type,html5|url|max:255',
+            'versionProvider.xpath' => 'required_if:versionProvider.type,html5|max:255',
+            'versionProvider.regex' => 'required_if:versionProvider.type,html5|max:255'
+        ]); 
     }
     
     public function destroy(App $app)

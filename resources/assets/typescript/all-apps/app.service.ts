@@ -23,10 +23,19 @@ export class AppService
 
     public getApp(appId: number): Promise<App>
     {
-        return Promise.resolve(null);
+        const headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+        const url = `${this.appsUrl}/${appId}`;
+
+        return this.http
+             .get(url, { headers: headers })
+             .toPromise()
+             .then(response => response.json())
+             .catch(this.handleError);
     }
     
-    public createApp(app: App, versionProvider: VersionProvider): Promise<App>
+    public createApp(app: App): Promise<App>
     {
         const headers = new Headers({
             'Content-Type': 'application/json',
@@ -35,28 +44,28 @@ export class AppService
         const url = this.appsUrl;
 
         return this.http
-            .post(url, JSON.stringify({ app: app, versionProvider: versionProvider }), { headers: headers })
+            .post(url, JSON.stringify(app), { headers: headers })
             .toPromise()
             .then(response => response.json());
     }
     
-    public updateApp(appId: number, app: App, versionProvider: VersionProvider): Promise<App>
+    public updateApp(app: App): Promise<App>
     {
         const headers = new Headers({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         });
-        const url = `${this.appsUrl}/${appId}`;
+        const url = `${this.appsUrl}/${app.id}`;
 
         return this.http
-             .put(url, JSON.stringify({ app: app, versionProvider: versionProvider }), { headers: headers })
+             .put(url, JSON.stringify(app), { headers: headers })
              .toPromise()
-             .then(response => response.json())
-             .catch(this.handleError);
+             .then(response => response.json());
     }
     
-    public saveApp(app: App, versionProvider: VersionProvider): Promise<App>
+    public saveApp(app: App): Promise<App>
     {
-        return app.id ? this.updateApp(app.id, app, versionProvider) : this.createApp(app, versionProvider);
+        return app.id ? this.updateApp(app) : this.createApp(app);
     }
     
     public deleteApp(appId: number): Promise<App>

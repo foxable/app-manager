@@ -2,11 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Masterminds\HTML5;
 
-class Html5VersionProvider extends Model
+class Html5VersionProvider extends BaseModel
 {
+    protected $hidden = ['id', 'app_id', 'created_at', 'updated_at'];
+    
     protected $table = 'apps_html5_version_providers';
     
     public function app()
