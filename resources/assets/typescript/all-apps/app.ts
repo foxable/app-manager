@@ -9,6 +9,7 @@ export class App
         public latestVersion: string,
         public websiteUrl: string,
         public downloadUrl: string,
+        public versionProviderType: string,
         public versionProvider: VersionProvider
     ) { }   
 }

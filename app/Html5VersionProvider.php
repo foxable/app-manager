@@ -4,20 +4,20 @@ namespace App;
 
 use Masterminds\HTML5;
 
-class Html5VersionProvider extends BaseModel
+class Html5VersionProvider extends VersionProvider
 {
-    protected $hidden = ['id', 'app_id', 'created_at', 'updated_at'];
+    public static $type = 'html5';
     
-    protected $table = 'apps_html5_version_providers';
-    
+    protected $hidden = ['id'];
+
     public function app()
     {
-        return $this->belongsTo('App\App');
+        return $this->morphOne('App\App', 'versionProvider');
     }
     
     public function getVersion()
     {
-        $html = file_get_contents($this->provider_url);
+        $html = file_get_contents($this->providerUrl);
         $parser = new HTML5();
         $doc = $parser->loadHTML($html);
         

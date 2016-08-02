@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 
 class AppsResourceController extends Controller
 {
-    private $availableVersionProviders = [
-        'none' => 'None',
-        'html5' => 'HTML5'
-    ];
-    
     public function __construct()
     {
         $this->middleware('auth');
@@ -37,8 +32,9 @@ class AppsResourceController extends Controller
         $app->name = $request->name;
         $app->websiteUrl = $request->websiteUrl;
         $app->downloadUrl = $request->downloadUrl;
-        $app->versionProvider = (object) $request->versionProvider;
-        $app->save();      
+        $app->save();
+        
+        $app->versionProvider->save($request->versionProvider);
 
         return $app->toJson();
     }
@@ -50,8 +46,9 @@ class AppsResourceController extends Controller
         $app->name = $request->name;
         $app->websiteUrl = $request->websiteUrl;
         $app->downloadUrl = $request->downloadUrl;
-        $app->versionProvider = (object) $request->versionProvider;
         $app->save();
+        
+        $app->versionProvider->save($request->versionProvider);
         
         return $app->toJson();
     }

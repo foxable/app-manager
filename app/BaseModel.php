@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\HTML5VersionProvider;
 
 class BaseModel extends Model
 {

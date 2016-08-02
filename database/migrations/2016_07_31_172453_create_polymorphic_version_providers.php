@@ -14,21 +14,15 @@ class CreatePolymorphicVersionProviders extends Migration
     {
         Schema::create('version_providers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('provider_id')->unsigned();
-            $table->string('provider_type');  
+            $table->integer('version_provider_id')->unsigned();
+            $table->string('version_provider_type');  
         });
         
         Schema::rename('apps_html5_version_providers', 'html5_version_providers');
 
         Schema::table('html5_version_providers', function (Blueprint $table) {
             $table->dropColumn('app_id');
-        });
-        
-        Schema::table('html5_version_providers', function (Blueprint $table) {
             $table->dropColumn('created_at');
-        });
-        
-        Schema::table('html5_version_providers', function (Blueprint $table) {
             $table->dropColumn('updated_at');
         });
 
@@ -40,7 +34,7 @@ class CreatePolymorphicVersionProviders extends Migration
         Schema::table('apps', function (Blueprint $table) {
             $table->renameColumn('version_provider', 'version_provider_id');
             $table->integer('version_provider_id')->unsigned();
-            $table->foreign('version_provider_id')->references('id')->on('version_providers');
+            $table->string('version_provider_type');
         });
     }
 
@@ -51,8 +45,6 @@ class CreatePolymorphicVersionProviders extends Migration
      */
     public function down()
     {
-        Schema::drop('version_providers');       
-        
         Schema::table('html5_version_providers', function (Blueprint $table) {
             $table->integer('app_id')->unsigned();
         });
@@ -62,9 +54,9 @@ class CreatePolymorphicVersionProviders extends Migration
         Schema::drop('static_version_providers');
         
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropForeign(['version_provider_id']);
             $table->string('version_provider');
-            $table->renameColumn('version_provider_id', 'version_provider');            
+            $table->renameColumn('version_provider_id', 'version_provider');
+            $table->dropColumn('version_provider_type');  
         });
     }
 }

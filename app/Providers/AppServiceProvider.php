@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
+
+use App\StaticVersionProvider;
+use App\Html5VersionProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Relation::morphMap([
+            StaticVersionProvider::$type => StaticVersionProvider::class,
+            Html5VersionProvider::$type  => Html5VersionProvider::class
+        ]);
     }
 
     /**

@@ -35,7 +35,7 @@ export class AppModalComponent implements OnInit, AfterViewInit
     {
         this.title = "";
         const versionProvider = this.versionProviderFactory[this.versionProviders[0].id]();
-        this.app = new App('', '', '', '', versionProvider);        
+        this.app = new App('', '', '', '', this.versionProviders[0].id, versionProvider);        
         this.errors = [];
     }
     
