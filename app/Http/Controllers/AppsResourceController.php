@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\App;
 use App\Html5VersionProvider;
+use App\StaticVersionProvider;
 use Illuminate\Http\Request;
 
 class AppsResourceController extends Controller
@@ -28,13 +29,21 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request);
         
-        $app = new App();
-        $app->name = $request->name;
-        $app->websiteUrl = $request->websiteUrl;
-        $app->downloadUrl = $request->downloadUrl;
+        $app = new App($request);
         $app->save();
         
-        $app->versionProvider->save($request->versionProvider);
+        switch ($request->versionProviderType)
+        {
+            case 'static':
+                $versionProvider = new StaticVersionProvider($request->versionProvider);
+                breaK;
+            case 'html5':
+                $versionProvider = new Html5VersionProvider($request->versionProvider);
+                break;
+        }
+        
+        $versionProvider->save();        
+        $versionProvider->app()->save($app);
 
         return $app->toJson();
     }
@@ -43,12 +52,45 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request, $app);
 
-        $app->name = $request->name;
-        $app->websiteUrl = $request->websiteUrl;
-        $app->downloadUrl = $request->downloadUrl;
+        $app->fill($request->only(['name', 'websiteUrl', 'downloadUrl']));
         $app->save();
         
-        $app->versionProvider->save($request->versionProvider);
+        // version provider type changed
+        if ($app->versionProviderType !== $request->versionProviderType)
+        {
+            // delete previous version provider
+            $app->versionProvider->delete();
+            
+            // create new version provider
+            switch ($request->versionProviderType)
+            {
+                case 'static':
+                    $versionProvider = new StaticVersionProvider($request->versionProvider);
+                    break;
+                case 'html5':
+                    $versionProvider = new Html5VersionProvider($request->versionProvider);
+                    break;
+            }
+
+            $versionProvider->save();
+            $versionProvider->app()->save($app);
+        }
+        // previous version provider updated
+        else
+        {
+            // create new version provider
+            switch ($app->versionProviderType)
+            {
+                case 'static':
+                    $app->versionProvider->fill($request->versionProvider);
+                    break;
+                case 'html5':
+                    $app->versionProvider->fill($request->versionProvider);
+                    break;
+            }
+            
+            $app->versionProvider->save();
+        }
         
         return $app->toJson();
     }
@@ -59,11 +101,11 @@ class AppsResourceController extends Controller
             'name' => 'required|max:255|unique:apps,name' . ($app ? ',' . $app->id : ''),
             'websiteUrl' => 'required|url|max:255',
             'downloadUrl' => 'required|url|max:255',
-            'versionProvider.type' => 'required|in:static,html5',
-            'versionProvider.latestVersion' => 'required_if:versionProvider.type,static|max:255',
-            'versionProvider.url' => 'required_if:versionProvider.type,html5|url|max:255',
-            'versionProvider.xpath' => 'required_if:versionProvider.type,html5|max:255',
-            'versionProvider.regex' => 'required_if:versionProvider.type,html5|max:255'
+            'versionProviderType' => 'required|in:static,html5',
+            'versionProvider.latestVersion' => 'required_if:versionProviderType,static|max:255',
+            'versionProvider.providerUrl' => 'required_if:versionProviderType,html5|url|max:255',
+            'versionProvider.xpath' => 'required_if:versionProviderType,html5|max:255',
+            'versionProvider.regex' => 'required_if:versionProviderType,html5|max:255'
         ]); 
     }
     

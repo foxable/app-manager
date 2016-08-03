@@ -57,7 +57,7 @@ export class AppModalComponent implements OnInit, AfterViewInit
     
     public changeVersionProvider(newType: string): void
     {
-        this.versionProvider = this.versionProviderFactory[newType]();
+        this.app.versionProvider = this.versionProviderFactory[newType]();
     }
     
     public changeLatestVersion(newVersion: string): void

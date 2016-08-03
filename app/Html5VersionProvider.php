@@ -7,6 +7,8 @@ use Masterminds\HTML5;
 class Html5VersionProvider extends VersionProvider
 {
     public static $type = 'html5';
+ 
+    protected $fillable = ['providerUrl', 'xpath', 'regex'];
     
     public function getVersion()
     {

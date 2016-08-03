@@ -6,6 +6,7 @@ class App extends BaseModel
 {
     public static $snakeAttributes = false;
     
+    protected $fillable = ['name', 'websiteUrl', 'downloadUrl'];
     protected $hidden = ['versionProviderId', 'createdAt', 'updatedAt'];
     protected $appends = ['versionProvider'];
     
