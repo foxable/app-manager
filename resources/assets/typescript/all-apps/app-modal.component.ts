@@ -1,11 +1,10 @@
-import {Component, ViewChild, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import {Component, ViewChild, OnInit, AfterViewInit, Output, EventEmitter, ComponentResolver, ComponentFactory, ViewContainerRef } from '@angular/core';
 
 import {BS_VIEW_PROVIDERS, MODAL_DIRECTIVES, TAB_DIRECTIVES, ModalDirective} from 'ng2-bootstrap/ng2-bootstrap'; 
 
 import {App} from './app';
 import {AppService} from './app.service';
-import { VersionProvider } from '../version-providers/version-provider';
-import { VERSION_PROVIDERS, VERSION_PROVIDER_FACTORY } from '../version-providers/version-provider.factory';
+import {VERSION_PROVIDERS, VersionProvider, VersionProviderComponent} from '../version-providers';
  
 @Component({
   selector: 'app-modal',
@@ -16,26 +15,29 @@ import { VERSION_PROVIDERS, VERSION_PROVIDER_FACTORY } from '../version-provider
 export class AppModalComponent implements OnInit, AfterViewInit
 {
     @ViewChild('modal') private modal: ModalDirective;
+    @ViewChild('versionProvider', { read: ViewContainerRef }) private versionProviderContainer: ViewContainerRef;
     
     @Output() public onReady: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onSaved: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onClosed: EventEmitter<any> = new EventEmitter<any>();
     
-    public versionProviders = VERSION_PROVIDERS;
-    public versionProviderFactory = VERSION_PROVIDER_FACTORY;
+    public versionProviderTypes = VERSION_PROVIDERS;
     
     public title: string;
     public app: App;
-    public versionProvider: VersionProvider 
+    public versionProviders: { [type: string]: VersionProvider; };    
     public errors: { field: string; errors: string[]; }[];
     
-    public constructor (private appService: AppService) { }
+    public constructor(
+        private resolver: ComponentResolver,
+        private appService: AppService
+    ) { }
     
     public ngOnInit(): void
     {
-        this.title = "";
-        const versionProvider = this.versionProviderFactory[this.versionProviders[0].id]();
-        this.app = new App('', '', '', '', this.versionProviders[0].id, versionProvider);        
+        this.title = '';
+        this.app = new App();
+        this.versionProviders = {};
         this.errors = [];
     }
     
@@ -55,16 +57,49 @@ export class AppModalComponent implements OnInit, AfterViewInit
         this.onClosed.emit(null);
     }
     
-    public changeVersionProvider(newType: string): void
+    public setTitle(title: string): void
     {
-        this.app.versionProvider = this.versionProviderFactory[newType]();
+        this.title = title;
     }
     
-    public changeLatestVersion(newVersion: string): void
+    public setApp(app: App): void
     {
-        this.app.latestVersion = newVersion;
+        this.app = app;
+        this.versionProviders[app.versionProviderType] = app.versionProvider;
+        this.versionProviderTypeChanged(app.versionProviderType);
     }
     
+    public versionProviderTypeChanged(newType: string): void
+    {
+        if (this.versionProviderContainer.length > 0)
+            this.versionProviderContainer.remove();
+        
+        const versionProviderType = VERSION_PROVIDERS.find(_ => _.id === newType);
+        let versionProvider: VersionProvider;
+        
+        // use previous version provider
+        if (this.versionProviders[newType])
+        {
+            versionProvider = this.versionProviders[newType];
+        }
+        // create empty version provider
+        else
+        {
+            versionProvider = versionProviderType.createModel();
+            this.versionProviders[newType] = versionProvider;
+        }
+        this.app.versionProvider = versionProvider;
+        
+        // create version provider component
+        this.resolver
+            .resolveComponent(versionProviderType.componentType)
+            .then((factory: ComponentFactory<VersionProviderComponent>) => {
+                const componentRef = this.versionProviderContainer.createComponent(factory, 0, this.versionProviderContainer.injector);
+
+                componentRef.instance.versionProvider = this.app.versionProvider;
+            });
+    }
+
     public save(): void
     {
         this.appService.saveApp(this.app)

@@ -1,8 +1,2 @@
-import { VersionProvider } from './version-provider';
-
-export class StaticVersionProvider implements VersionProvider
-{
-    public constructor(
-        public latestVersion: string
-    ) { }
-}
+export {StaticVersionProvider} from './static/static-version-provider';
+export {StaticVersionProviderComponent} from './static/static-version-provider.component';

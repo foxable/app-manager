@@ -1,8 +1,9 @@
-import { Component, OnInit, ComponentResolver, ComponentFactory, ViewContainerRef, ViewChild, ComponentRef } from '@angular/core';
+import {Component, OnInit, ComponentResolver, ComponentFactory, ViewContainerRef, ViewChild, ComponentRef} from '@angular/core';
 
-import { App } from './app';
-import { AppService } from './app.service';
-import { AppModalComponent } from './app-modal.component';
+import {App} from './app';
+import {AppService} from './app.service';
+import {AppModalComponent} from './app-modal.component';
+import {VERSION_PROVIDERS} from '../version-providers';
 
 @Component({
   selector: 'all-apps',
@@ -71,27 +72,28 @@ export class AllAppsComponent implements OnInit
         }
     }
     
-    public showCreateAppModal(): void
+    public openCreateAppModal(): void
     {
         this.openModal()
             .then(componentRef => {
-                componentRef.instance.title = 'Add Application';
+                const defaultVersionProvider = VERSION_PROVIDERS[0];
+                const app = new App();                
+                app.versionProviderType = defaultVersionProvider.id;
+                app.versionProvider = defaultVersionProvider.createModel();
+                
+                componentRef.instance.setTitle('Add Application');
+                componentRef.instance.setApp(app);
             });
     }
     
-    public showEditAppModal(appId: number): void
+    public openEditAppModal(appId: number): void
     {
         this.openModal()
-            .then(componentRef => {
-                componentRef.instance.title = 'Edit Application';
+            .then(componentRef => {                
                 this.appService.getApp(appId).then(app => {
-                    componentRef.instance.app = app;
+                    componentRef.instance.setTitle('Edit Application');
+                    componentRef.instance.setApp(app);
                 });
             });
-    }
-    
-    public hideModal(): void
-    {
-        this.closeModal();
     }
 }

@@ -1,15 +1,12 @@
-import { VersionProvider } from '../version-providers/version-provider';
+import {VersionProvider} from '../version-providers';
 
 export class App
 {
-    public id: number;
-    
-    public constructor(
-        public name: string,
-        public latestVersion: string,
-        public websiteUrl: string,
-        public downloadUrl: string,
-        public versionProviderType: string,
-        public versionProvider: VersionProvider
-    ) { }   
+    public id = 0;
+    public name = '';
+    public latestVersion = '';
+    public websiteUrl = '';
+    public downloadUrl = '';
+    public versionProviderType = '';
+    public versionProvider: VersionProvider = null; 
 }

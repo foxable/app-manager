@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Headers, Http} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { App } from './app';
-import { VersionProvider } from '../version-providers/version-provider';
+import {App} from './app';
+import {VersionProvider} from '../version-providers';
 
 @Injectable()
 export class AppService

@@ -29,18 +29,20 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request);
         
-        $app = new App($request);
-        $app->save();
+        $app = new App($request);        
         
         switch ($request->versionProviderType)
         {
             case 'static':
                 $versionProvider = new StaticVersionProvider($request->versionProvider);
+                $app->latestVersion = $versionProvider->latestVersion;
                 breaK;
             case 'html5':
                 $versionProvider = new Html5VersionProvider($request->versionProvider);
                 break;
         }
+        
+        $app->save();
         
         $versionProvider->save();        
         $versionProvider->app()->save($app);
@@ -52,8 +54,7 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request, $app);
 
-        $app->fill($request->only(['name', 'websiteUrl', 'downloadUrl']));
-        $app->save();
+        $app->fill($request->only(['name', 'websiteUrl', 'downloadUrl']));        
         
         // version provider type changed
         if ($app->versionProviderType !== $request->versionProviderType)
@@ -66,6 +67,7 @@ class AppsResourceController extends Controller
             {
                 case 'static':
                     $versionProvider = new StaticVersionProvider($request->versionProvider);
+                    $app->latestVersion = $versionProvider->latestVersion;
                     break;
                 case 'html5':
                     $versionProvider = new Html5VersionProvider($request->versionProvider);
@@ -83,6 +85,7 @@ class AppsResourceController extends Controller
             {
                 case 'static':
                     $app->versionProvider->fill($request->versionProvider);
+                    $app->latestVersion = $app->versionProvider->latestVersion;
                     break;
                 case 'html5':
                     $app->versionProvider->fill($request->versionProvider);
@@ -91,6 +94,8 @@ class AppsResourceController extends Controller
             
             $app->versionProvider->save();
         }
+        
+        $app->save();
         
         return $app->toJson();
     }
