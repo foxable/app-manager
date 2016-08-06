@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\App;
@@ -8,20 +8,20 @@ use App\Html5VersionProvider;
 use App\StaticVersionProvider;
 use Illuminate\Http\Request;
 
-class AppsResourceController extends Controller
-{
+class AppController extends Controller
+{    
     public function __construct()
     {
         $this->middleware('auth');
     }
     
-    public function index(Request $request)
+    public function index()
     {
         return App::orderBy('name', 'asc')->get()->toJson();
     }
     
     public function show(App $app)
-    {        
+    {
         return $app->toJson();
     }
     
@@ -29,20 +29,18 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request);
         
-        $app = new App($request);        
+        $app = new App($request->only(['name', 'websiteUrl', 'downloadUrl']));
+        $app->save();
         
         switch ($request->versionProviderType)
         {
             case 'static':
                 $versionProvider = new StaticVersionProvider($request->versionProvider);
-                $app->latestVersion = $versionProvider->latestVersion;
                 breaK;
             case 'html5':
                 $versionProvider = new Html5VersionProvider($request->versionProvider);
                 break;
         }
-        
-        $app->save();
         
         $versionProvider->save();        
         $versionProvider->app()->save($app);
@@ -54,7 +52,8 @@ class AppsResourceController extends Controller
     {
         $this->validateApp($request, $app);
 
-        $app->fill($request->only(['name', 'websiteUrl', 'downloadUrl']));        
+        $app->fill($request->only(['name', 'websiteUrl', 'downloadUrl'])); 
+        $app->save();
         
         // version provider type changed
         if ($app->versionProviderType !== $request->versionProviderType)
@@ -67,7 +66,6 @@ class AppsResourceController extends Controller
             {
                 case 'static':
                     $versionProvider = new StaticVersionProvider($request->versionProvider);
-                    $app->latestVersion = $versionProvider->latestVersion;
                     break;
                 case 'html5':
                     $versionProvider = new Html5VersionProvider($request->versionProvider);
@@ -85,7 +83,6 @@ class AppsResourceController extends Controller
             {
                 case 'static':
                     $app->versionProvider->fill($request->versionProvider);
-                    $app->latestVersion = $app->versionProvider->latestVersion;
                     break;
                 case 'html5':
                     $app->versionProvider->fill($request->versionProvider);
@@ -93,9 +90,7 @@ class AppsResourceController extends Controller
             }
             
             $app->versionProvider->save();
-        }
-        
-        $app->save();
+        }        
         
         return $app->toJson();
     }
@@ -117,15 +112,19 @@ class AppsResourceController extends Controller
     public function destroy(App $app)
     {
         $app->delete();
+        
+        return $app->toJson();
     }
     
-    public function refresh(App $app)
+    public function updateVersion(App $app)
     {
-        $versionProvider = $app->versionProvider();
+        $versionProvider = $app->versionProvider;
         
-        $app->latest_version = $versionProvider->getVersion();
+        $version = $versionProvider->getVersion();
+        
+        $app->latestVersion = $version;
         $app->save();
         
-        return redirect()->action('AppController@index');
+        return response()->json(['version' => $version]);
     }
 }

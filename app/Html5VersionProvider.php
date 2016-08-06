@@ -15,7 +15,7 @@ class Html5VersionProvider extends VersionProvider
         $html = file_get_contents($this->providerUrl);
         $parser = new HTML5();
         $doc = $parser->loadHTML($html);
-        
+
         $xpath = new \DOMXpath($doc);
 
         $node = $xpath->query($this->xpath)->item(0);

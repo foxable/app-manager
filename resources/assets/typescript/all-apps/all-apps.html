@@ -1,7 +1,7 @@
 <div class="container">
     <div #appModal></div>
     <h1>All Applications</h1>
-    <button class="btn btn-sm btn-primary" (click)="openCreateAppModal()">
+    <button class="btn btn-sm btn-primary" (click)="createApp()">
         <i class="fa fa-plus"></i> Add Application
     </button>
     <table class="table table-striped table-hover">
@@ -17,13 +17,13 @@
                 <td>{{ app.name }}</td>
                 <td>{{ app.latestVersion }}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning">
+                    <button class="btn btn-sm btn-warning" (click)="updateVersion(app)">
                         <i class="fa fa-refresh" aria-hidden="true"></i> Update Version
                     </button>
-                    <button class="btn btn-sm btn-primary" (click)="openEditAppModal(app.id)">
+                    <button class="btn btn-sm btn-primary" (click)="editApp(app)">
                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
                     </button>
-                    <button class="btn btn-sm btn-danger">
+                    <button class="btn btn-sm btn-danger" (click)="deleteApp(app)">
                         <i class="fa fa-trash"></i> Delete
                     </button>              
                 </td>

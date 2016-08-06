@@ -24,10 +24,10 @@ export class AllAppsComponent implements OnInit
     
     public ngOnInit(): void
     {
-        this.getApps();
+        this.reloadApps();
     }
     
-    private getApps(): void
+    private reloadApps(): void
     {
         this.appService.getAllApps().then(apps => this.apps = apps);
     }
@@ -48,7 +48,7 @@ export class AllAppsComponent implements OnInit
                     });
                     
                     componentRef.instance.onSaved.subscribe(() => {
-                        this.getApps();
+                        this.reloadApps();
                     });
                     
                     componentRef.instance.onClosed.subscribe(() => {
@@ -72,7 +72,7 @@ export class AllAppsComponent implements OnInit
         }
     }
     
-    public openCreateAppModal(): void
+    public createApp(): void
     {
         this.openModal()
             .then(componentRef => {
@@ -86,14 +86,28 @@ export class AllAppsComponent implements OnInit
             });
     }
     
-    public openEditAppModal(appId: number): void
+    public editApp(app: App): void
     {
         this.openModal()
             .then(componentRef => {                
-                this.appService.getApp(appId).then(app => {
+                this.appService.getApp(app.id).then(app => {
                     componentRef.instance.setTitle('Edit Application');
                     componentRef.instance.setApp(app);
                 });
             });
+    }
+    
+    public deleteApp(app: App): void
+    {
+        this.appService.deleteApp(app.id).then(() => {
+            this.reloadApps();
+        });
+    }
+    
+    public updateVersion(app: App): void
+    {
+        this.appService.updateVersion(app.id).then(() => {
+            this.reloadApps();
+        });
     }
 }

@@ -15,15 +15,20 @@ Route::get('/', function() {
     return redirect('/all-apps');
  });
 
- Route::model('app', 'App\App');
- 
- Route::controller('/all-apps', 'AllAppsController');
- 
- Route::get('/apps/{app}/refresh', 'AppController@refresh');
- 
- Route::resource('apps', 'AppsResourceController', [
-     'parameters' => 'singular',
-     'except' => ['create', 'edit']
- ]);
+Route::get('/all-apps', 'AllAppsController@index');
+
+Route::group(['prefix' => 'api/apps'], function() {
+    Route::model('app', 'App\App');
+    
+    Route::get('/', 'Api\AppController@index');
+    Route::post('/', 'Api\AppController@store');
+        
+    Route::get('/{app}', 'Api\AppController@show');        
+    Route::put('/{app}', 'Api\AppController@update');
+    Route::delete('/{app}', 'Api\AppController@destroy');
+    
+    Route::get('/{app}/update-version', 'Api\AppController@updateVersion');
+});
+
 
 Route::auth();
