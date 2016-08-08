@@ -5,10 +5,11 @@ import {BS_VIEW_PROVIDERS, MODAL_DIRECTIVES, TAB_DIRECTIVES, ModalDirective} fro
 import {App} from './app';
 import {AppService} from './app.service';
 import {VERSION_PROVIDERS, VersionProvider, VersionProviderComponent} from '../version-providers';
+import {ErrorsComponent, ValidationErrorsComponent} from '../common';
  
 @Component({
   selector: 'app-modal',
-  directives: [MODAL_DIRECTIVES, TAB_DIRECTIVES],
+  directives: [MODAL_DIRECTIVES, TAB_DIRECTIVES, ErrorsComponent, ValidationErrorsComponent],
   viewProviders: [BS_VIEW_PROVIDERS],
   templateUrl: './app-modal.html'
 })
@@ -16,6 +17,8 @@ export class AppModalComponent implements OnInit, AfterViewInit
 {
     @ViewChild('modal') private modal: ModalDirective;
     @ViewChild('versionProvider', { read: ViewContainerRef }) private versionProviderContainer: ViewContainerRef;
+    @ViewChild('errors') private errors: ErrorsComponent;
+    @ViewChild('validationErrors') private validationErrors: ValidationErrorsComponent;
     
     @Output() public onReady: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onSaved: EventEmitter<any> = new EventEmitter<any>();
@@ -25,8 +28,7 @@ export class AppModalComponent implements OnInit, AfterViewInit
     
     public title: string;
     public app: App;
-    public versionProviders: { [type: string]: VersionProvider; };    
-    public errors: { field: string; errors: string[]; }[];
+    public versionProviders: { [type: string]: VersionProvider; };
     
     public constructor(
         private resolver: ComponentResolver,
@@ -38,7 +40,6 @@ export class AppModalComponent implements OnInit, AfterViewInit
         this.title = '';
         this.app = new App();
         this.versionProviders = {};
-        this.errors = [];
     }
     
     public ngAfterViewInit(): void
@@ -103,27 +104,40 @@ export class AppModalComponent implements OnInit, AfterViewInit
     public save(): void
     {
         this.appService.saveApp(this.app)
-            .then(() => {
+            .then(app => {
                 this.hide();
                 this.onSaved.emit(null);
             })
-            .catch((error: any) => {
-                if (error._body)
-                {
-                    const errors: { [field: string]: string[]; } = JSON.parse(error._body);
-                    
-                    this.errors = Object.keys(errors).map(field => {
-                       return {
-                           field: field,
-                           errors: errors[field]
-                       };
-                    });
-                }
-        });
+            .catch(error => this.handleError(error));
     }
     
     public cancel(): void
     {
         this.hide();
+    }
+    
+    private clearErrors(): void
+    {
+        this.errors.clear();
+        this.validationErrors.clear();
+    }
+    
+    private handleError(error: any): void
+    {
+        this.clearErrors();
+            
+        if (error['_body'])
+        {
+            const json = JSON.parse(error['_body']);
+
+            if (json['error'])
+                this.errors.show(json['error']['message']);
+            else
+                this.validationErrors.show(json);
+        }
+        else
+        {
+            this.errors.show(error['statusText']);
+        }
     }
 }

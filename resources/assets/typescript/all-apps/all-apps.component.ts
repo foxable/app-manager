@@ -4,10 +4,12 @@ import {App} from './app';
 import {AppService} from './app.service';
 import {AppModalComponent} from './app-modal.component';
 import {VERSION_PROVIDERS} from '../version-providers';
+import {ErrorsComponent} from '../common';
 
 @Component({
   selector: 'all-apps',
   templateUrl: './all-apps.html',
+  directives: [ErrorsComponent],
   providers: [AppService]
 })
 export class AllAppsComponent implements OnInit
@@ -15,6 +17,7 @@ export class AllAppsComponent implements OnInit
     private modal: Promise<ComponentRef<AppModalComponent>>;
     
     @ViewChild('appModal', { read: ViewContainerRef }) private appModalContainer: ViewContainerRef;
+    @ViewChild('errors') private errors: ErrorsComponent;
     
     public apps: App[] = [];
     
@@ -29,7 +32,9 @@ export class AllAppsComponent implements OnInit
     
     private reloadApps(): void
     {
-        this.appService.getAllApps().then(apps => this.apps = apps);
+        this.appService.getAllApps()
+            .then(apps => this.apps = apps)
+            .catch(error => this.handleError(error));
     }
     
     private openModal(): Promise<ComponentRef<AppModalComponent>>
@@ -88,26 +93,53 @@ export class AllAppsComponent implements OnInit
     
     public editApp(app: App): void
     {
-        this.openModal()
-            .then(componentRef => {                
-                this.appService.getApp(app.id).then(app => {
-                    componentRef.instance.setTitle('Edit Application');
-                    componentRef.instance.setApp(app);
-                });
-            });
+        this.appService.getApp(app.id)
+            .then(app => {
+                this.clearErrors();
+                this.openModal()
+                    .then(componentRef => {
+                        componentRef.instance.setTitle('Edit Application');
+                        componentRef.instance.setApp(app);
+                    });
+            })
+            .catch(error => this.handleError(error));
     }
     
     public deleteApp(app: App): void
     {
-        this.appService.deleteApp(app.id).then(() => {
-            this.reloadApps();
-        });
+        this.appService.deleteApp(app.id)
+            .then(app => {
+                this.reloadApps();
+            })
+            .catch(error => this.handleError(error));
     }
     
     public updateVersion(app: App): void
     {
-        this.appService.updateVersion(app.id).then(() => {
-            this.reloadApps();
-        });
+        this.appService.updateVersion(app.id)
+            .then(() => {
+                this.reloadApps();
+            })
+            .catch(error => this.handleError(error));
     }
+    
+    private clearErrors(): void
+    {
+        this.errors.clear();
+    }
+    
+    private handleError(error: any): void
+    {
+        if (error['_body'])
+        {
+            const json = JSON.parse(error['_body']);
+
+            if (json['error'])
+                this.errors.show(json['error']['message']);
+        }
+        else
+        {
+            this.errors.show(error['statusText']);
+        }
+}
 }

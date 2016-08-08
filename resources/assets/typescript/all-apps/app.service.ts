@@ -23,8 +23,7 @@ export class AppService
         return this.http
             .get(this.appsUrl, { headers: this.headers })
             .toPromise()
-            .then(response => response.json())
-            .catch(this.handleError);
+            .then(response => response.json());
     }
 
     public getApp(appId: number): Promise<App>
@@ -35,8 +34,7 @@ export class AppService
         return this.http
              .get(url, { headers: this.headers })
              .toPromise()
-             .then(response => response.json())
-             .catch(this.handleError);
+             .then(response => response.json());
     }
     
     public createApp(app: App): Promise<App>
@@ -71,8 +69,7 @@ export class AppService
         return this.http
              .delete(url, { headers: this.headers })
              .toPromise()
-             .then(response => response.json())
-             .catch(this.handleError);
+             .then(response => response.json());
     }
     
     public updateVersion(appId: number): Promise<{ version: string; }>
@@ -82,13 +79,6 @@ export class AppService
         return this.http
              .get(url, { headers: this.headers })
              .toPromise()
-             .then(response => response.json())
-             .catch(this.handleError);
-    }
-    
-    private handleError(error: any)
-    {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+             .then(response => response.json());
     }
 }

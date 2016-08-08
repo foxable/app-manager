@@ -1,6 +1,10 @@
 <div class="container">
     <div #appModal></div>
+    <errors #errors></errors>
     <h1>All Applications</h1>
+    <div class="alert alert-danger" *ngIf="error">
+        {{error.message}}
+    </div>
     <button class="btn btn-sm btn-primary" (click)="createApp()">
         <i class="fa fa-plus"></i> Add Application
     </button>

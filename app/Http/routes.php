@@ -30,5 +30,4 @@ Route::group(['prefix' => 'api/apps'], function() {
     Route::get('/{app}/update-version', 'Api\AppController@updateVersion');
 });
 
-
 Route::auth();
