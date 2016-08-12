@@ -102,8 +102,8 @@ class AppController extends Controller
             'websiteUrl' => 'required|url|max:255',
             'downloadUrl' => 'required|url|max:255',
             'versionProviderType' => 'required|in:static,html5',
-            'versionProvider.latestVersion' => 'required_if:versionProviderType,static|max:255',
-            'versionProvider.providerUrl' => 'required_if:versionProviderType,html5|url|max:255',
+            'versionProvider.version' => 'required_if:versionProviderType,static|max:255',
+            'versionProvider.url' => 'required_if:versionProviderType,html5|url|max:255',
             'versionProvider.xpath' => 'required_if:versionProviderType,html5|max:255',
             'versionProvider.regex' => 'required_if:versionProviderType,html5|max:255'
         ]); 

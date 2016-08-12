@@ -8,11 +8,11 @@ class Html5VersionProvider extends VersionProvider
 {
     public static $type = 'html5';
  
-    protected $fillable = ['providerUrl', 'xpath', 'regex'];
+    protected $fillable = ['url', 'xpath', 'regex'];
     
     public function getVersion()
     {
-        $html = file_get_contents($this->providerUrl);
+        $html = file_get_contents($this->url);
         $parser = new HTML5();
         $doc = $parser->loadHTML($html);
 

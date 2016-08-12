@@ -1,18 +1,18 @@
 <div class="form-group">
-    <label for="provider_url" class="col-sm-3 control-label">Provider URL</label>
+    <label for="provider_url" class="col-sm-3 control-label"> URL</label>
     <div class="col-sm-6">
-        <input type="text" id="provider_url" class="form-control" placeholder="http://" [(ngModel)]="versionProvider.providerUrl" />
+        <input type="text" id="provider_url" class="form-control" placeholder="http://" [(ngModel)]="versionProvider.url" />
     </div>
 </div>
 <div class="form-group">
-    <label for="xpath" class="col-sm-3 control-label">XPath Selector</label>
+    <label for="provider_xpath" class="col-sm-3 control-label">XPath Selector</label>
     <div class="col-sm-6">
-        <input type="text" id="xpath" class="form-control" [(ngModel)]="versionProvider.xpath" />
+        <input type="text" id="provider_xpath" class="form-control" [(ngModel)]="versionProvider.xpath" />
     </div>
 </div>
 <div class="form-group">
-    <label for="regex" class="col-sm-3 control-label">RegExp</label>
+    <label for="provider_regex" class="col-sm-3 control-label">RegExp</label>
     <div class="col-sm-6">
-        <input type="text"  id="regex" class="form-control" [(ngModel)]="versionProvider.regex" />
+        <input type="text"  id="provider_regex" class="form-control" [(ngModel)]="versionProvider.regex" />
     </div>
 </div>

@@ -15,7 +15,7 @@ class CreateHtml5VersionProvidersTable extends Migration
         Schema::create('apps_html5_version_providers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('app_id')->unsigned();            
-            $table->string('provider_url');
+            $table->string('url');
             $table->string('xpath');
             $table->string('regex');            
             $table->timestamps();

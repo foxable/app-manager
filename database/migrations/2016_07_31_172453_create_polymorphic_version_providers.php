@@ -28,7 +28,7 @@ class CreatePolymorphicVersionProviders extends Migration
 
         Schema::create('static_version_providers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('latest_version');
+            $table->string('version');
         });      
         
         Schema::table('apps', function (Blueprint $table) {

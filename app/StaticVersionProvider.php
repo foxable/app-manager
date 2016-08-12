@@ -6,10 +6,10 @@ class StaticVersionProvider extends VersionProvider
 {
     public static $type = 'static';
 
-    protected $fillable = ['latestVersion'];
+    protected $fillable = ['version'];
     
     public function getVersion()
     {
-        return $this->latestVersion;
+        return $this->version;
     }
 }
