@@ -1,17 +1,21 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "target": "ES5",
-        "module": "system",
+        "target": "es5",
+        "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "removeComments": false,
-        "noImplicitAny": false
+        "noUnusedLocals": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "jsx": "react",
+        "rootDir": "src",
+        "outDir": "dist"
     },
     "exclude": [
-        "node_modules",
-        "vendor"
+        "node_modules"
     ]
 }

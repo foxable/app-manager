@@ -1,20 +1,8 @@
-vendor/
-node_modules/
-typings/
+# Logs
+*.log
 
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
+# Build
+dist
 
-# Laravel 5 & Lumen specific
-bootstrap/cache/
-.env.*.php
-.env.php
-.env
-
-# Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
-.rocketeer/
-/_ide_helper.php
-nbproject
-/.tmp
-/composer.lock
+# Dependencies
+node_modules
