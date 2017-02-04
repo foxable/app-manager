@@ -3,7 +3,7 @@ import * as fs from "fs";
 import {app} from "electron";
 import {Promise} from "core-js";
 
-import {App} from "../Models";
+import {App} from "../models";
 
 export class Storage
 {

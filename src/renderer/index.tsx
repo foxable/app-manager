@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import {Apps} from "./Apps";
+import {AppRegistry} from "./AppRegistry";
 
 ReactDOM.render(
-    <Apps/>,
+    <AppRegistry/>,
     document.getElementById("app-manager-root")
 );

@@ -1,7 +1,7 @@
 export interface App
 {
-    id: string;
-    name: string;
-    websiteUrl: string;
-    downloadUrl: string;
+    readonly id: string;
+    readonly name: string;
+    readonly websiteUrl: string;
+    readonly downloadUrl: string;
 }
