@@ -2,7 +2,7 @@
   "name": "foxable-app-manager",
   "version": "0.0.1",
   "description": "An app manager for Windows",
-  "main": "main.js",
+  "main": "dist/main/bootstrap.js",
   "private": true,
   "scripts": {
     "start": "electron .",
@@ -10,21 +10,21 @@
     "tsc:w": "tsc -w"
   },
   "dependencies": {
-    "@types/react": "^0.14.47",
-    "@types/react-dom": "^0.14.18",
-    "bootstrap": "^4.0.0-alpha.5",
+    "bootstrap": "^4.0.0-alpha.6",
     "font-awesome": "^4.6.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
   "devDependencies": {
+    "@types/react": "^0.14.47",
+    "@types/react-dom": "^0.14.18",
     "@types/core-js": "^0.9.35",
     "@types/electron": "^1.4.31",
-    "@types/node": "^7.0.4",
+    "@types/node": "^6.0.62",
     "bootstrap-sass": "^3.3.0",
     "core-js": "^2.4.1",
     "del": "^2.2.1",
-    "electron": "^1.4.15",
+    "electron": "^1.5.0",
     "gulp-sass": "^2.3.2",
     "source-map-loader": "^0.1.5",
     "ts-loader": "^1.2.0",
