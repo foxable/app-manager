@@ -2,7 +2,7 @@ import * as url from "url";
 import * as path from "path";
 import {BrowserWindow,ipcMain} from "electron";
 
-import {Storage} from "./Storage";
+import {AppStore} from "./AppStore";
 import {MainEvents,RendererEvents} from "../Events";
 
 export default class Main
@@ -66,6 +66,6 @@ export default class Main
 
     private static onLoadApps(event: Electron.IpcMainEvent): void
     {
-        Storage.getApps().then(apps => event.sender.send(RendererEvents.appsLoaded, apps));
+        AppStore.loadApps().then(apps => event.sender.send(RendererEvents.appsLoaded, apps));
     }
 }
