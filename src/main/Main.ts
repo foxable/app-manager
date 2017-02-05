@@ -32,7 +32,7 @@ export default class Main
         Main.mainWindow = new Main.BrowserWindow({width: 800, height: 600});
         // and load the index.html of the app.
         Main.mainWindow.loadURL(url.format({
-            pathname: path.join(Main.app.getAppPath(), "index.html"),
+            pathname: path.join(Main.app.getAppPath(), "static", "index.html"),
             protocol: "file:",
             slashes: true
         }));

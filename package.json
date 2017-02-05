@@ -2,12 +2,13 @@
   "name": "foxable-app-manager",
   "version": "0.0.1",
   "description": "An app manager for Windows",
-  "main": "dist/main/bootstrap.js",
+  "main": "dist/js/main/bootstrap.js",
   "private": true,
   "scripts": {
     "start": "electron .",
     "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "tsc:w": "tsc -w",
+    "sass": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
@@ -26,7 +27,6 @@
     "bootstrap-sass": "^3.3.0",
     "core-js": "^2.4.1",
     "electron": "^1.5.0",
-    "gulp-sass": "^2.3.2",
     "source-map-loader": "^0.1.5",
     "ts-loader": "^1.2.0"
   }

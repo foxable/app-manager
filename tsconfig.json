@@ -13,7 +13,7 @@
         "noImplicitAny": true,
         "jsx": "react",
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist/js"
     },
     "exclude": [
         "node_modules"
