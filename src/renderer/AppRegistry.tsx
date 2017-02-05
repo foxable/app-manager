@@ -1,43 +1,25 @@
 import * as React from "react";
-import {ipcRenderer,shell} from "electron";
+import {shell} from "electron";
 
 import {App} from "../models";
-import {MainEvents,RendererEvents} from "../events";
 import {Page,Button,ButtonGroup,AppTable,AppColumn} from "./components";
 
 export interface AppRegistryProps
 {
-}
-
-export interface AppRegistryState
-{
     apps: App[];
 }
 
-export class AppRegistry extends React.Component<AppRegistryProps, AppRegistryState>
+export class AppRegistry extends React.Component<AppRegistryProps, undefined>
 {
     private columns: AppColumn[] = [
         { id: "name", label: "Name" },
         { id: "actions", label: "Actions"}
     ];
 
-    public constructor(props: AppRegistryProps)
-    {
-        super(props);
-        this.state = { apps: [] };
-
-        ipcRenderer.on(RendererEvents.appsLoaded, (event, apps: App[]) => this.setState({ apps: apps }));
-    }
-
-    public componentDidMount(): void
-    {
-        ipcRenderer.send(MainEvents.loadApps);
-    }
-
     public render(): JSX.Element
     {
         return <Page title="Application Registry">
-                 <AppTable columns={this.columns} rows={this.state.apps} cellContent={this.renderCell}/>
+                 <AppTable columns={this.columns} rows={this.props.apps} cellContent={this.renderCell}/>
                </Page>;
     }
 
