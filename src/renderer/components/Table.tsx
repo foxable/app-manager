@@ -1,24 +1,24 @@
 import * as React from "react";
 
-export interface ColumnDescription
+export interface TableColumn
 {
     id: string;
-    label: string;
+    label: string | JSX.Element;
 }
 
-export interface RowDescription
+export interface TableRow
 {
     id: string;
+    cells: (string | JSX.Element)[];
 }
 
-export interface TableProps<TColumn extends ColumnDescription, TRow extends RowDescription>
+export interface TableProps
 {
-    columns: TColumn[];
-    rows: TRow[];
-    cellContent: (column: TColumn, row: TRow) => string | JSX.Element
+    columns: TableColumn[];
+    rows: TableRow[];
 }
 
-export class Table<TColumn extends ColumnDescription, TRow extends RowDescription> extends React.Component<TableProps<TColumn, TRow>, undefined>
+export class Table extends React.Component<TableProps, undefined>
 {
     public render(): JSX.Element
     {
@@ -31,7 +31,7 @@ export class Table<TColumn extends ColumnDescription, TRow extends RowDescriptio
                  <tbody>
                    {this.props.rows.map(row =>
                        <tr key={row.id}>
-                         {this.props.columns.map(column => <td key={column.id}>{this.props.cellContent(column, row)}</td>)}
+                         {this.props.columns.map((column, i) => <td key={column.id}>{row.cells[i]}</td>)}
                        </tr>)
                    }
                  </tbody>
