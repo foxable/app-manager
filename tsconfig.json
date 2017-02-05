@@ -10,6 +10,7 @@
         "removeComments": false,
         "noUnusedLocals": true,
         "noImplicitThis": true,
+        "noImplicitAny": true,
         "jsx": "react",
         "rootDir": "src",
         "outDir": "dist"
