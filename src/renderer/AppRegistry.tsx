@@ -5,15 +5,21 @@ import {MainEvents,RendererEvents} from "../events";
 import {App} from "../models";
 import {Page,Button,ButtonGroup,Table,TableColumn,TableRow} from "./components";
 
+interface RegisteredApp extends App
+{
+    latestVersion: string;
+}
+
 export interface AppRegistryState
 {
-    apps: App[];
+    apps: RegisteredApp[];
 }
 
 export class AppRegistry extends React.Component<undefined, AppRegistryState>
 {
     private columns: TableColumn[] = [
         { id: "name", label: "Name" },
+        { id: "latestVersion", label: "Latest Version" },
         { id: "actions", label: "Actions"}
     ];
 
@@ -22,7 +28,8 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         super();
         this.state = { apps: [] };
 
-        ipcRenderer.on(RendererEvents.appsLoaded, (event, apps) => this.onAppsLoaded(apps))
+        ipcRenderer.on(RendererEvents.appsLoaded, (event, apps) => this.onAppsLoaded(apps));
+        ipcRenderer.on(RendererEvents.latestVersionRetrieved, (event, args) => this.onLatestVersionRetrieved(args.appId, args.version))
     }
 
     public componentDidMount(): void
@@ -41,13 +48,14 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
     {
         return this.state.apps.map(app => ({
             id: app.id,
-            cells: [app.name, this.rowActions(app)]
+            cells: [app.name, app.latestVersion, this.rowActions(app)]
         }));
     }
 
     private rowActions(app: App): JSX.Element
     {
         return <ButtonGroup>
+                 <Button label="Get Version" icon="download" onClick={() => ipcRenderer.send(MainEvents.retrieveLatestVersion, app.id)}/>
                  <Button label="Download" icon="download" onClick={() => shell.openExternal(app.downloadUrl)}/>
                  <Button label="Website" icon="globe" onClick={() => shell.openExternal(app.websiteUrl)}/>
                </ButtonGroup>;
@@ -55,6 +63,13 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
 
     private onAppsLoaded(apps: App[]): void
     {
-        this.setState({ apps: apps });
+        this.setState({ apps: apps.map(app => ({ ...app, latestVersion: "" })) });
+    }
+
+    private onLatestVersionRetrieved(appId: string, version: string): void
+    {
+        this.state.apps.find(app => app.id === appId).latestVersion = version;
+
+        this.setState({ apps: this.state.apps });
     }
 }

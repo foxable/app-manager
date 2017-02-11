@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
+    "cheerio": "^0.22.0",
     "classnames": "^2.2.5",
     "font-awesome": "^4.6.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.17.31",
     "@types/classnames": "0.0.32",
     "@types/core-js": "^0.9.35",
     "@types/electron": "^1.4.31",

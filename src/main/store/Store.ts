@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import * as path from "path";
+import {Promise} from "core-js";
 
-export abstract class JsonStore
+export class Store
 {
-    protected static readDir<T>(dirPath: string): Promise<T[]>
+    public static readJsonFiles<T>(dirPath: string, readFile: (file: string) => Promise<T> = Store.readJsonFile): Promise<T[]>
     {
         return new Promise<T[]>((resolve, reject) =>
         {
@@ -12,12 +12,12 @@ export abstract class JsonStore
                 if (err)
                     reject(err.message);
                 else
-                    resolve(JsonStore.chainPromises(files.map(file => JsonStore.readFile<T>(path.join(dirPath, file)))));
+                    resolve(Store.chainPromises(files.map(file => readFile(file))));
             });
         });
     }
 
-    protected static readFile<T>(filePath: string): Promise<T>
+    public static readJsonFile<T>(filePath: string): Promise<T>
     {
         return new Promise<T>((resolve, reject) =>
         {
@@ -26,7 +26,7 @@ export abstract class JsonStore
                 if (err)
                     reject(err.message);
                 else
-                    resolve(JsonStore.parseAsJson<T>(data));
+                    resolve(Store.parseAsJson<T>(data));
             });
         });
     }
@@ -37,7 +37,7 @@ export abstract class JsonStore
 
         promises.forEach(promise => chainedPromise = chainedPromise
             .then(result => promise
-                .then(item => JsonStore.append<T>(item, result))
+                .then(item => Store.append<T>(item, result))
             )
         );
 

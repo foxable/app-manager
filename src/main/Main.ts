@@ -2,7 +2,8 @@ import * as url from "url";
 import * as path from "path";
 import {BrowserWindow,ipcMain} from "electron";
 
-import {AppStore} from "./AppStore";
+import {AppStore} from "./store/AppStore";
+import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
 import {MainEvents,RendererEvents} from "../Events";
 
 export default class Main
@@ -24,6 +25,7 @@ export default class Main
         Main.app.on("activate", Main.onActivate);
         // register renderer messages
         ipcMain.on(MainEvents.loadApps, Main.onLoadApps);
+        ipcMain.on(MainEvents.retrieveLatestVersion, Main.onRetrieveLatestVersion);
     }
 
     private static onReady(): void
@@ -67,5 +69,11 @@ export default class Main
     private static onLoadApps(event: Electron.IpcMainEvent): void
     {
         AppStore.loadApps().then(apps => event.sender.send(RendererEvents.appsLoaded, apps));
+    }
+
+    private static onRetrieveLatestVersion(event: Electron.IpcMainEvent, appId: string): void
+    {
+        const versionProvider = AppStore.loadVersionProvider(appId);
+        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(RendererEvents.latestVersionRetrieved, { appId: appId, version: version }));
     }
 }
