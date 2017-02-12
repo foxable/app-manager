@@ -1,11 +1,11 @@
 export const MainEvents =
 {
     loadApps: "app-manager:load-apps",
-    retrieveLatestVersion: "app-manager:retrieve-latest-version"
+    loadLatestVersion: "app-manager:load-latest-version"
 };
 
 export const RendererEvents =
 {
     appsLoaded: "app-manager:apps-loaded",
-    latestVersionRetrieved: "app-manager:latest-version-retrieved"
+    latestVersionLoaded: "app-manager:latest-version-loaded"
 };

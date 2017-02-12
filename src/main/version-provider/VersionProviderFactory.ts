@@ -1,16 +1,16 @@
 import {VersionProvider} from "../../models";
-import {HtmlVersionProviderWrapper} from "./HtmlVersionProviderWrapper";
+import {HtmlVersionProviderAdapter} from "./HtmlVersionProviderAdapter";
 
-export interface VersionProviderWrapper
+export interface VersionProviderAdapter
 {
     getVersion(): Promise<string>;
 }
 
 export class VersionProviderFactory
 {
-    public static create(versionProvider: VersionProvider): VersionProviderWrapper
+    public static create(versionProvider: VersionProvider): VersionProviderAdapter
     {
         if (versionProvider.type === "html")
-            return new HtmlVersionProviderWrapper(versionProvider);
+            return new HtmlVersionProviderAdapter(versionProvider);
     }
 }

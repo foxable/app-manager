@@ -29,7 +29,7 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         this.state = { apps: [] };
 
         ipcRenderer.on(RendererEvents.appsLoaded, (event, apps) => this.onAppsLoaded(apps));
-        ipcRenderer.on(RendererEvents.latestVersionRetrieved, (event, args) => this.onLatestVersionRetrieved(args.appId, args.version))
+        ipcRenderer.on(RendererEvents.latestVersionLoaded, (event, args) => this.onLatestVersionLoaded(args.appId, args.version))
     }
 
     public componentDidMount(): void
@@ -55,7 +55,7 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
     private rowActions(app: App): JSX.Element
     {
         return <ButtonGroup>
-                 <Button label="Get Version" icon="download" onClick={() => ipcRenderer.send(MainEvents.retrieveLatestVersion, app.id)}/>
+                 <Button label="Get Version" icon="download" onClick={() => ipcRenderer.send(MainEvents.loadLatestVersion, app.id)}/>
                  <Button label="Download" icon="download" onClick={() => shell.openExternal(app.downloadUrl)}/>
                  <Button label="Website" icon="globe" onClick={() => shell.openExternal(app.websiteUrl)}/>
                </ButtonGroup>;
@@ -66,7 +66,7 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         this.setState({ apps: apps.map(app => ({ ...app, latestVersion: "" })) });
     }
 
-    private onLatestVersionRetrieved(appId: string, version: string): void
+    private onLatestVersionLoaded(appId: string, version: string): void
     {
         this.state.apps.find(app => app.id === appId).latestVersion = version;
 

@@ -25,7 +25,7 @@ export default class Main
         Main.app.on("activate", Main.onActivate);
         // register renderer messages
         ipcMain.on(MainEvents.loadApps, Main.onLoadApps);
-        ipcMain.on(MainEvents.retrieveLatestVersion, Main.onRetrieveLatestVersion);
+        ipcMain.on(MainEvents.loadLatestVersion, Main.onLoadLatestVersion);
     }
 
     private static onReady(): void
@@ -71,9 +71,9 @@ export default class Main
         AppStore.loadApps().then(apps => event.sender.send(RendererEvents.appsLoaded, apps));
     }
 
-    private static onRetrieveLatestVersion(event: Electron.IpcMainEvent, appId: string): void
+    private static onLoadLatestVersion(event: Electron.IpcMainEvent, appId: string): void
     {
         const versionProvider = AppStore.loadVersionProvider(appId);
-        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(RendererEvents.latestVersionRetrieved, { appId: appId, version: version }));
+        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(RendererEvents.latestVersionLoaded, { appId: appId, version: version }));
     }
 }
