@@ -28,6 +28,6 @@ export class AppStore
 
     private static getAppsPath(): string
     {
-        return path.join(app.getAppPath(), "apps");
+        return path.join(app.getAppPath(), "storage", "apps");
     }
 }

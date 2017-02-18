@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import {Promise} from "core-js";
 
+import * as utils from "../utils";
+
 export class Store
 {
     public static readJsonFiles<T>(dirPath: string, readFile: (file: string) => Promise<T> = Store.readJsonFile): Promise<T[]>
@@ -26,7 +28,7 @@ export class Store
                 if (err)
                     reject(err.message);
                 else
-                    resolve(Store.parseAsJson<T>(data));
+                    resolve(utils.parseJson<T>(data));
             });
         });
     }
@@ -48,10 +50,5 @@ export class Store
     {
         result.push(item);
         return result;
-    }
-
-    private static parseAsJson<T>(file: Buffer): T
-    {
-        return JSON.parse(file.toString());
     }
 }

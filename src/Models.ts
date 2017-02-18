@@ -14,3 +14,11 @@ export interface HtmlVersionProvider
     url: string;
     getVersion($: CheerioStatic): string;
 }
+
+export interface SystemApp
+{
+    name: string;
+    version: string;
+    publisher: string;
+    installDate: string;
+}

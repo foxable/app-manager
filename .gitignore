@@ -6,7 +6,7 @@
 dist
 
 # Storage
-apps
+storage
 
 # Dependencies
 node_modules
