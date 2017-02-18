@@ -2,14 +2,15 @@ import * as url from "url";
 import * as path from "path";
 import {BrowserWindow,ipcMain} from "electron";
 
+import {mainEvents,rendererEvents} from "../events";
 import {AppStore} from "./store/AppStore";
 import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
-import {MainEvents,RendererEvents} from "../Events";
+import {WindowsAppProvider} from "./system/WindowsAppProvider";
 
 export default class Main
 {
     public static mainWindow: Electron.BrowserWindow;
-    public static app: Electron.App;
+    private static app: Electron.App;
     public static BrowserWindow: any;
 
     public static main(app: Electron.App, browserWindow: typeof BrowserWindow)
@@ -24,8 +25,9 @@ export default class Main
         Main.app.on("window-all-closed", Main.onWindowAllClosed);
         Main.app.on("activate", Main.onActivate);
         // register renderer messages
-        ipcMain.on(MainEvents.loadApps, Main.onLoadApps);
-        ipcMain.on(MainEvents.loadLatestVersion, Main.onLoadLatestVersion);
+        ipcMain.on(mainEvents.loadApps, Main.onLoadApps);
+        ipcMain.on(mainEvents.loadSystemApps, Main.onLoadSystemApps);
+        ipcMain.on(mainEvents.loadLatestVersion, Main.onLoadLatestVersion);
     }
 
     private static onReady(): void
@@ -68,12 +70,17 @@ export default class Main
 
     private static onLoadApps(event: Electron.IpcMainEvent): void
     {
-        AppStore.loadApps().then(apps => event.sender.send(RendererEvents.appsLoaded, apps));
+        AppStore.loadApps().then(apps => event.sender.send(rendererEvents.appsLoaded, apps));
     }
 
     private static onLoadLatestVersion(event: Electron.IpcMainEvent, appId: string): void
     {
         const versionProvider = AppStore.loadVersionProvider(appId);
-        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(RendererEvents.latestVersionLoaded, { appId: appId, version: version }));
+        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(rendererEvents.latestVersionLoaded, { appId: appId, version: version }));
+    }
+
+    private static onLoadSystemApps(event: Electron.IpcMainEvent): void
+    {
+        new WindowsAppProvider().loadSystemApps().then(systemApps => event.sender.send(rendererEvents.systemAppsLoaded, systemApps));
     }
 }
