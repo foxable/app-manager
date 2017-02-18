@@ -1,8 +1,9 @@
+/// <reference path="../shared.d.ts"/>
+
 import * as React from "react";
 import {shell,ipcRenderer} from "electron";
 
 import {MainEvents,RendererEvents} from "../events";
-import {App} from "../models";
 import {Page,Button,ButtonGroup,Table,TableColumn,TableRow} from "./components";
 
 interface RegisteredApp extends App

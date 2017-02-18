@@ -1,8 +1,9 @@
+/// <reference path="../main.d.ts"/>
+/// <reference path="../../shared.d.ts"/>
+
 import {spawn} from "child_process";
 import {Promise} from "core-js";
 
-import {SystemApp} from "../../models";
-import {SystemAppProvider} from "./SystemAppProvider";
 import * as utils from "../utils";
 
 export class WindowsAppProvider implements SystemAppProvider

@@ -1,7 +1,8 @@
+/// <reference path="../main.d.ts"/>
+
 import * as path from "path";
 import {app} from "electron";
 
-import {App,VersionProvider} from "../../models";
 import {Store} from "./Store";
 
 export class AppStore

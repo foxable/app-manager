@@ -1,10 +1,9 @@
+/// <reference path="../main.d.ts"/>
+
 import * as http from "http";
 import * as https from "https";
 import * as cheerio from "cheerio";
 import {Promise} from "core-js";
-
-import {HtmlVersionProvider} from "../../models";
-import {VersionProviderAdapter} from "./VersionProviderFactory";
 
 export class HtmlVersionProviderAdapter implements VersionProviderAdapter
 {

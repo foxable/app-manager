@@ -1,10 +1,6 @@
-import {VersionProvider} from "../../models";
-import {HtmlVersionProviderAdapter} from "./HtmlVersionProviderAdapter";
+/// <reference path="../main.d.ts"/>
 
-export interface VersionProviderAdapter
-{
-    getVersion(): Promise<string>;
-}
+import {HtmlVersionProviderAdapter} from "./HtmlVersionProviderAdapter";
 
 export class VersionProviderFactory
 {
