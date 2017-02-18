@@ -1,8 +1,12 @@
 # Logs
 *.log
+*.log.*
 
 # Build
 dist
+
+# Storage
+apps
 
 # Dependencies
 node_modules
