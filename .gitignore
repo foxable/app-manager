@@ -5,6 +5,9 @@
 # Build
 dist
 
+# Docs
+docs
+
 # Storage
 storage
 
