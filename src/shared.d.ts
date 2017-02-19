@@ -1,4 +1,4 @@
-declare interface App
+declare interface RegisteredApp
 {
     readonly id: string;
     readonly name: string;
@@ -6,10 +6,10 @@ declare interface App
     readonly downloadUrl: string;
 }
 
-declare interface SystemApp
+declare interface InstalledApp
 {
-    name: string;
-    version: string;
-    publisher: string;
-    installDate: string;
+    readonly name: string;
+    readonly version: string;
+    readonly publisher: string;
+    readonly installDate: string;
 }

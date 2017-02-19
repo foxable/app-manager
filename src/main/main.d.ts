@@ -1,14 +1,14 @@
-declare interface SystemAppProvider
+declare interface InstalledAppProvider
 {
-    loadSystemApps(): Promise<SystemApp[]>;
+    loadInstalledApps(): Promise<InstalledApp[]>;
 }
 
 declare type VersionProvider = HtmlVersionProvider;
 
 declare interface HtmlVersionProvider
 {
-    type: "html";
-    url: string;
+    readonly type: "html";
+    readonly url: string;
     getVersion($: CheerioStatic): string;
 }
 

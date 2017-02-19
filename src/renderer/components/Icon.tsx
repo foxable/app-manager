@@ -6,7 +6,6 @@ export type IconAlignment = "left" | "right";
 export interface IconProps
 {
     name: string;
-    align: IconAlignment;
 }
 
 export class Icon extends React.Component<IconProps, undefined>
@@ -20,8 +19,7 @@ export class Icon extends React.Component<IconProps, undefined>
     {
         return classNames(
             "fa",
-            `fa-${this.props.name}`,
-            `icon-${this.props.align}`
+            `fa-${this.props.name}`
         );
     }
 }

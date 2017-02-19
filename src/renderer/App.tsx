@@ -8,8 +8,8 @@ export class App extends React.Component<undefined, undefined>
     {
         return <div className="container-fluid">
                  <NavBar label="App Manager" color="inverse" fixed="top">
-                   <NavLink to="/apps">App List</NavLink>
-                   <NavLink to="/app-registry">App Registry</NavLink>
+                   <NavLink to="/installed-apps">Installed Apps</NavLink>
+                   <NavLink to="/registered-apps">Registered Apps</NavLink>
                  </NavBar>
                  {this.props.children}
                </div>;

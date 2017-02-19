@@ -6,7 +6,7 @@ import {Promise} from "core-js";
 
 import * as utils from "../utils";
 
-export class WindowsAppProvider implements SystemAppProvider
+export class WindowsAppProvider implements InstalledAppProvider
 {
     private properties = [
         { name: "DisplayName", as: "name" },
@@ -16,16 +16,16 @@ export class WindowsAppProvider implements SystemAppProvider
     ];
     private nonNullProperties = ["DisplayName"];
 
-    public loadSystemApps(): Promise<SystemApp[]>
+    public loadInstalledApps(): Promise<InstalledApp[]>
     {
-        return new Promise<SystemApp[]>((resolve, reject) =>
+        return new Promise<InstalledApp[]>((resolve, reject) =>
         {
             // build ps arguments
             const args = `Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${this.selectApps()} | ${this.filterApps()} | ConvertTo-Json`;
             // run ps command
             const child = spawn("powershell.exe", [args]);
 
-            child.stdout.on("data", data => resolve(utils.parseJson<SystemApp[]>(data)));
+            child.stdout.on("data", data => resolve(utils.parseJson<InstalledApp[]>(data)));
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
             //child.on("exit", () => {});
             child.stdin.end();

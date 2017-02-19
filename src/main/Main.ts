@@ -25,8 +25,8 @@ export default class Main
         Main.app.on("window-all-closed", Main.onWindowAllClosed);
         Main.app.on("activate", Main.onActivate);
         // register renderer messages
-        ipcMain.on(mainEvents.loadApps, Main.onLoadApps);
-        ipcMain.on(mainEvents.loadSystemApps, Main.onLoadSystemApps);
+        ipcMain.on(mainEvents.loadRegisteredApps, Main.onLoadRegisteredApps);
+        ipcMain.on(mainEvents.loadInstalledApps, Main.onLoadInstalledApps);
         ipcMain.on(mainEvents.loadLatestVersion, Main.onLoadLatestVersion);
     }
 
@@ -68,9 +68,9 @@ export default class Main
             Main.app.quit();
     }
 
-    private static onLoadApps(event: Electron.IpcMainEvent): void
+    private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void
     {
-        AppStore.loadApps().then(apps => event.sender.send(rendererEvents.appsLoaded, apps));
+        AppStore.loadApps().then(apps => event.sender.send(rendererEvents.registeredAppsLoaded, apps));
     }
 
     private static onLoadLatestVersion(event: Electron.IpcMainEvent, appId: string): void
@@ -79,8 +79,8 @@ export default class Main
         VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(rendererEvents.latestVersionLoaded, { appId: appId, version: version }));
     }
 
-    private static onLoadSystemApps(event: Electron.IpcMainEvent): void
+    private static onLoadInstalledApps(event: Electron.IpcMainEvent): void
     {
-        new WindowsAppProvider().loadSystemApps().then(systemApps => event.sender.send(rendererEvents.systemAppsLoaded, systemApps));
+        new WindowsAppProvider().loadInstalledApps().then(apps => event.sender.send(rendererEvents.installedAppsLoaded, apps));
     }
 }

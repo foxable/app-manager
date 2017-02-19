@@ -9,9 +9,9 @@ import {AppRegistry} from "./AppRegistry";
 ReactDOM.render(
     <Router history={hashHistory}>
       <Route path="/" component={App}>
-        <IndexRedirect to="/apps"/>
-        <Route path="/apps" component={AppList}/>
-        <Route path="/app-registry" component={AppRegistry}/>
+        <IndexRedirect to="/installed-apps"/>
+        <Route path="/installed-apps" component={AppList}/>
+        <Route path="/registered-apps" component={AppRegistry}/>
       </Route>
     </Router>,
     document.getElementById("app-manager-root")

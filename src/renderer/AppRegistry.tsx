@@ -1,26 +1,25 @@
 /// <reference path="../shared.d.ts"/>
 
 import * as React from "react";
-import {shell,ipcRenderer} from "electron";
+import {ipcRenderer} from "electron";
 
 import {mainEvents,rendererEvents} from "../events";
-import {Page,Button,ButtonGroup,Table,TableColumn,TableRow} from "./components";
+import {Page,Button,ButtonGroup,Icon,Table,TableColumn,TableRow} from "./components";
 
-interface RegisteredApp extends App
+interface RegisteredAppWithVersion extends RegisteredApp
 {
     latestVersion: string;
 }
 
 export interface AppRegistryState
 {
-    apps: RegisteredApp[];
+    apps: RegisteredAppWithVersion[];
 }
 
 export class AppRegistry extends React.Component<undefined, AppRegistryState>
 {
     private columns: TableColumn[] = [
         { id: "name", label: "Name" },
-        { id: "latestVersion", label: "Latest Version" },
         { id: "actions", label: "Actions" }
     ];
 
@@ -29,18 +28,17 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         super();
         this.state = { apps: [] };
 
-        ipcRenderer.on(rendererEvents.appsLoaded, (event, apps) => this.onAppsLoaded(apps));
-        ipcRenderer.on(rendererEvents.latestVersionLoaded, (event, args) => this.onLatestVersionLoaded(args.appId, args.version));
+        ipcRenderer.on(rendererEvents.registeredAppsLoaded, (event, apps) => this.onAppsLoaded(apps));
     }
 
     public componentDidMount(): void
     {
-        ipcRenderer.send(mainEvents.loadApps);
+        ipcRenderer.send(mainEvents.loadRegisteredApps);
     }
 
     public render(): JSX.Element
     {
-        return <Page title="Application Registry">
+        return <Page title="Registered Apps">
                  <Table columns={this.columns} rows={this.rows}/>
                </Page>;
     }
@@ -49,28 +47,20 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
     {
         return this.state.apps.map(app => ({
             id: app.id,
-            cells: [app.name, app.latestVersion, this.rowActions(app)]
+            cells: [app.name, this.rowActions(app)]
         }));
     }
 
-    private rowActions(app: App): JSX.Element
+    private rowActions(app: RegisteredAppWithVersion): JSX.Element
     {
         return <ButtonGroup>
-                 <Button label="Get Version" icon="download" onClick={() => ipcRenderer.send(mainEvents.loadLatestVersion, app.id)}/>
-                 <Button label="Download" icon="download" onClick={() => shell.openExternal(app.downloadUrl)}/>
-                 <Button label="Website" icon="globe" onClick={() => shell.openExternal(app.websiteUrl)}/>
+                 <Button onClick={() => {}}><Icon name="bookmark-o"/></Button>
+                 <Button onClick={() => {}}><Icon name="remove"/></Button>
                </ButtonGroup>;
     }
 
-    private onAppsLoaded(apps: App[]): void
+    private onAppsLoaded(apps: RegisteredAppWithVersion[]): void
     {
         this.setState({ apps: apps.map(app => ({ ...app, latestVersion: "" })) });
-    }
-
-    private onLatestVersionLoaded(appId: string, version: string): void
-    {
-        this.state.apps.find(app => app.id === appId).latestVersion = version;
-
-        this.setState({ apps: this.state.apps });
     }
 }

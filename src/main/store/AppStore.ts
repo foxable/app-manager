@@ -7,14 +7,14 @@ import {Store} from "./Store";
 
 export class AppStore
 {
-    public static loadApps(): Promise<App[]>
+    public static loadApps(): Promise<RegisteredApp[]>
     {
-        return Store.readJsonFiles<App>(AppStore.getAppsPath(), AppStore.loadApp);
+        return Store.readJsonFiles<RegisteredApp>(AppStore.getAppsPath(), AppStore.loadApp);
     }
 
-    public static loadApp(appId: string): Promise<App>
+    public static loadApp(appId: string): Promise<RegisteredApp>
     {
-        return Store.readJsonFile<App>(AppStore.getAppPath("app.json", appId));
+        return Store.readJsonFile<RegisteredApp>(AppStore.getAppPath("app.json", appId));
     }
 
     public static loadVersionProvider(appId: string): VersionProvider

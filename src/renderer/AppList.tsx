@@ -1,14 +1,14 @@
 /// <reference path="../shared.d.ts"/>
 
 import * as React from "react";
-import {ipcRenderer} from "electron";
+import {shell,ipcRenderer} from "electron";
 
 import {mainEvents,rendererEvents} from "../events";
-import {Page,Table,TableColumn,TableRow} from "./components";
+import {Page,Table,TableColumn,TableRow,Icon,Button,ButtonGroup} from "./components";
 
 export interface AppListState
 {
-    apps: SystemApp[];
+    apps: InstalledApp[];
 }
 
 export class AppList extends React.Component<undefined, AppListState>
@@ -16,8 +16,7 @@ export class AppList extends React.Component<undefined, AppListState>
     private columns: TableColumn[] = [
         { id: "name", label: "Name" },
         { id: "version", label: "Version" },
-        { id: "publisher", label: "Publisher" },
-        { id: "installDate", label: "Install Date" }
+        { id: "actions", label: "Actions" }
     ];
 
     public constructor()
@@ -25,17 +24,17 @@ export class AppList extends React.Component<undefined, AppListState>
         super();
         this.state = { apps: [] };
 
-        ipcRenderer.on(rendererEvents.systemAppsLoaded, (event, apps) => this.onSystemAppsLoaded(apps));
+        ipcRenderer.on(rendererEvents.installedAppsLoaded, (event, apps) => this.onAppsLoaded(apps));
     }
 
     public componentDidMount(): void
     {
-        ipcRenderer.send(mainEvents.loadSystemApps);
+        ipcRenderer.send(mainEvents.loadInstalledApps);
     }
 
     public render(): JSX.Element
     {
-        return <Page title="Applications">
+        return <Page title="Installed Apps">
                  <Table columns={this.columns} rows={this.rows}/>
                </Page>;
     }
@@ -44,11 +43,19 @@ export class AppList extends React.Component<undefined, AppListState>
     {
         return this.state.apps.map(app => ({
             id: app.name.toLowerCase(),
-            cells: [app.name, app.version, app.publisher, app.installDate]
+            cells: [app.name, app.version, this.rowActions(app)]
         }));
     }
 
-    private onSystemAppsLoaded(apps: SystemApp[]): void
+    private rowActions(app: InstalledApp): JSX.Element
+    {
+        return <ButtonGroup>
+                 <Button onClick={() => shell.openExternal("http://example.org")}><Icon name="download"/></Button>
+                 <Button onClick={() => shell.openExternal("http://example.org")}><Icon name="globe"/></Button>
+               </ButtonGroup>;
+    }
+
+    private onAppsLoaded(apps: InstalledApp[]): void
     {
         this.setState({ apps: apps });
     }
