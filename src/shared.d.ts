@@ -4,12 +4,10 @@ declare interface RegisteredApp
     readonly name: string;
     readonly websiteUrl: string;
     readonly downloadUrl: string;
+    readonly latestVersion: string;
 }
 
-declare interface InstalledApp
+declare interface InstalledApp extends RegisteredApp
 {
-    readonly name: string;
-    readonly version: string;
-    readonly publisher: string;
-    readonly installDate: string;
+    readonly installedVersion: string;    
 }

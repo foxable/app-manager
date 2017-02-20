@@ -1,10 +1,11 @@
+/// <reference path="./main.d.ts"/>
+
 import * as url from "url";
 import * as path from "path";
 import {BrowserWindow,ipcMain} from "electron";
 
 import {mainEvents,rendererEvents} from "../events";
 import {AppStore} from "./store/AppStore";
-import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
 import {WindowsAppProvider} from "./system/WindowsAppProvider";
 
 export default class Main
@@ -13,10 +14,19 @@ export default class Main
     private static app: Electron.App;
     public static BrowserWindow: any;
 
+    private static appStore: AppStore;
+    private static systemAppProvider: SystemAppProvider;
+
     public static main(app: Electron.App, browserWindow: typeof BrowserWindow)
     {
         Main.BrowserWindow = browserWindow;
         Main.app = app;
+        // init app store
+        const appsPath = path.join(Main.app.getAppPath(), "storage", "apps");
+        Main.appStore = new AppStore(appsPath);
+        // init system app provider
+        Main.systemAppProvider = new WindowsAppProvider();
+
         // This method will be called when Electron has finished
         // initialization and is ready to create browser windows.
         // Some APIs can only be used after this event occurs.
@@ -27,7 +37,6 @@ export default class Main
         // register renderer messages
         ipcMain.on(mainEvents.loadRegisteredApps, Main.onLoadRegisteredApps);
         ipcMain.on(mainEvents.loadInstalledApps, Main.onLoadInstalledApps);
-        ipcMain.on(mainEvents.loadLatestVersion, Main.onLoadLatestVersion);
     }
 
     private static onReady(): void
@@ -68,19 +77,37 @@ export default class Main
             Main.app.quit();
     }
 
-    private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void
-    {
-        AppStore.loadApps().then(apps => event.sender.send(rendererEvents.registeredAppsLoaded, apps));
-    }
-
-    private static onLoadLatestVersion(event: Electron.IpcMainEvent, appId: string): void
-    {
-        const versionProvider = AppStore.loadVersionProvider(appId);
-        VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(rendererEvents.latestVersionLoaded, { appId: appId, version: version }));
-    }
-
     private static onLoadInstalledApps(event: Electron.IpcMainEvent): void
     {
-        new WindowsAppProvider().loadInstalledApps().then(apps => event.sender.send(rendererEvents.installedAppsLoaded, apps));
+        Main.systemAppProvider.loadApps(false).then(systemApps =>
+        {
+            Main.appStore.loadApps(false).then(registeredApps =>
+            {
+                const installedApps: InstalledApp[] = [];
+
+                registeredApps.forEach(registeredApp =>
+                {
+                    const systemApp = systemApps.find(systemApp => systemApp.name.indexOf(registeredApp.name) > -1);
+
+                    if (!systemApp)
+                        return;
+
+                    installedApps.push({ ...registeredApp, installedVersion: systemApp.version });
+                });
+
+                event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
+            });
+        });
     }
+
+    private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void
+    {
+        Main.appStore.loadApps(false).then(apps => event.sender.send(rendererEvents.registeredAppsLoaded, apps));
+    }
+
+    // private static onLoadLatestVersion(event: Electron.IpcMainEvent, appId: string): void
+    // {
+    //     const versionProvider = AppStore.loadVersionProvider(appId);
+    //     VersionProviderFactory.create(versionProvider).getVersion().then(version => event.sender.send(rendererEvents.latestVersionLoaded, { appId: appId, version: version }));
+    // }
 }

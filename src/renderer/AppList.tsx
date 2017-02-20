@@ -43,15 +43,15 @@ export class AppList extends React.Component<undefined, AppListState>
     {
         return this.state.apps.map(app => ({
             id: app.name.toLowerCase(),
-            cells: [app.name, app.version, this.rowActions(app)]
+            cells: [app.name, app.installedVersion, this.rowActions(app)]
         }));
     }
 
     private rowActions(app: InstalledApp): JSX.Element
     {
         return <ButtonGroup>
-                 <Button onClick={() => shell.openExternal("http://example.org")}><Icon name="download"/></Button>
-                 <Button onClick={() => shell.openExternal("http://example.org")}><Icon name="globe"/></Button>
+                 <Button onClick={() => shell.openExternal(app.downloadUrl)}><Icon name="download"/></Button>
+                 <Button onClick={() => shell.openExternal(app.websiteUrl)}><Icon name="globe"/></Button>
                </ButtonGroup>;
     }
 

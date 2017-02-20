@@ -6,7 +6,7 @@ import {Promise} from "core-js";
 
 import * as utils from "../utils";
 
-export class WindowsAppProvider implements InstalledAppProvider
+export class WindowsAppProvider implements SystemAppProvider
 {
     private properties = [
         { name: "DisplayName", as: "name" },
@@ -15,17 +15,28 @@ export class WindowsAppProvider implements InstalledAppProvider
         { name: "InstallDate", as: "installDate" }
     ];
     private nonNullProperties = ["DisplayName"];
+    private systemApps: Promise<SystemApp[]> = null;
 
-    public loadInstalledApps(): Promise<InstalledApp[]>
+    public loadApps(forceReload: boolean): Promise<SystemApp[]>
     {
-        return new Promise<InstalledApp[]>((resolve, reject) =>
+        if (this.systemApps == null || forceReload)
+        {
+            this.systemApps = this.reloadApps();
+        }
+
+        return this.systemApps;
+    }
+
+    private reloadApps(): Promise<SystemApp[]>
+    {
+        return new Promise<SystemApp[]>((resolve, reject) =>
         {
             // build ps arguments
             const args = `Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${this.selectApps()} | ${this.filterApps()} | ConvertTo-Json`;
             // run ps command
             const child = spawn("powershell.exe", [args]);
 
-            child.stdout.on("data", data => resolve(utils.parseJson<InstalledApp[]>(data)));
+            child.stdout.on("data", data => resolve(utils.parseJson<SystemApp[]>(data)));
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
             //child.on("exit", () => {});
             child.stdin.end();

@@ -1,6 +1,14 @@
-declare interface InstalledAppProvider
+declare interface SystemApp
 {
-    loadInstalledApps(): Promise<InstalledApp[]>;
+    readonly name: string;
+    readonly version: string;
+    readonly publisher: string;
+    readonly installDate: string;
+}
+
+declare interface SystemAppProvider
+{
+    loadApps(forceReload: boolean): Promise<SystemApp[]>;
 }
 
 declare type VersionProvider = HtmlVersionProvider;

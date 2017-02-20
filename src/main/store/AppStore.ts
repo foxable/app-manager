@@ -1,34 +1,39 @@
 /// <reference path="../main.d.ts"/>
 
 import * as path from "path";
-import {app} from "electron";
 
 import {Store} from "./Store";
 
 export class AppStore
 {
-    public static loadApps(): Promise<RegisteredApp[]>
+    private registeredApps: Promise<RegisteredApp[]> = null;
+
+    public constructor(private appsPath: string)
     {
-        return Store.readJsonFiles<RegisteredApp>(AppStore.getAppsPath(), AppStore.loadApp);
     }
 
-    public static loadApp(appId: string): Promise<RegisteredApp>
+    public loadApps(forceReload: boolean): Promise<RegisteredApp[]>
     {
-        return Store.readJsonFile<RegisteredApp>(AppStore.getAppPath("app.json", appId));
+        if (this.registeredApps == null || forceReload)
+        {
+            this.registeredApps = Store.readJsonFiles<RegisteredApp>(this.appsPath, appId => this.loadApp(appId));
+        }
+
+        return this.registeredApps;
     }
 
-    public static loadVersionProvider(appId: string): VersionProvider
+    public loadApp(appId: string): Promise<RegisteredApp>
     {
-        return require(AppStore.getAppPath("versionProvider.js", appId)).default;
+        return Store.readJsonFile<RegisteredApp>(this.getAppPath("app.json", appId));
     }
 
-    private static getAppPath(file: string, appId: string): string
+    public loadVersionProvider(appId: string): VersionProvider
     {
-        return path.join(AppStore.getAppsPath(), appId, file);
+        return require(this.getAppPath("versionProvider.js", appId)).default;
     }
 
-    private static getAppsPath(): string
+    private getAppPath(file: string, appId: string): string
     {
-        return path.join(app.getAppPath(), "storage", "apps");
+        return path.join(this.appsPath, appId, file);
     }
 }
