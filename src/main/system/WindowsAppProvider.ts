@@ -4,13 +4,13 @@
 import {spawn} from "child_process";
 import {Promise} from "core-js";
 
-import * as utils from "../utils";
+import Utils from "../Utils";
 
 export class WindowsAppProvider implements SystemAppProvider
 {
     private properties = [
         { name: "DisplayName", as: "name" },
-        { name: "DisplayVersion", as: "version" },
+        { name: "DisplayVersion", as: "installedVersion" },
         { name: "Publisher", as: "publisher" },
         { name: "InstallDate", as: "installDate" }
     ];
@@ -36,7 +36,7 @@ export class WindowsAppProvider implements SystemAppProvider
             // run ps command
             const child = spawn("powershell.exe", [args]);
 
-            child.stdout.on("data", data => resolve(utils.parseJson<SystemApp[]>(data)));
+            child.stdout.on("data", data => resolve(Utils.parseJson<SystemApp[]>(data)));
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
             //child.on("exit", () => {});
             child.stdin.end();

@@ -7,6 +7,7 @@ import {BrowserWindow,ipcMain} from "electron";
 import {mainEvents,rendererEvents} from "../events";
 import {AppStore} from "./store/AppStore";
 import {WindowsAppProvider} from "./system/WindowsAppProvider";
+import Utils from "./Utils";
 
 export default class Main
 {
@@ -79,25 +80,13 @@ export default class Main
 
     private static onLoadInstalledApps(event: Electron.IpcMainEvent): void
     {
-        Main.systemAppProvider.loadApps(false).then(systemApps =>
-        {
-            Main.appStore.loadApps(false).then(registeredApps =>
+        Promise.all([Main.systemAppProvider.loadApps(false), Main.appStore.loadApps(false)])
+            .then(([systemApps, registeredApps]) =>
             {
-                const installedApps: InstalledApp[] = [];
-
-                registeredApps.forEach(registeredApp =>
-                {
-                    const systemApp = systemApps.find(systemApp => systemApp.name.indexOf(registeredApp.name) > -1);
-
-                    if (!systemApp)
-                        return;
-
-                    installedApps.push({ ...registeredApp, installedVersion: systemApp.version });
-                });
+                const installedApps = Utils.joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name));
 
                 event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
             });
-        });
     }
 
     private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {Promise} from "core-js";
 
-import * as utils from "../utils";
+import Utils from "../Utils";
 
 export class Store
 {
@@ -14,7 +14,7 @@ export class Store
                 if (err)
                     reject(err.message);
                 else
-                    resolve(Store.chainPromises(files.map(file => readFile(file))));
+                    resolve(Promise.all(files.map(file => readFile(file))));
             });
         });
     }
@@ -28,27 +28,8 @@ export class Store
                 if (err)
                     reject(err.message);
                 else
-                    resolve(utils.parseJson<T>(data));
+                    resolve(Utils.parseJson<T>(data));
             });
         });
-    }
-
-    private static chainPromises<T>(promises: Promise<T>[]): Promise<T[]>
-    {
-        let chainedPromise = new Promise<T[]>(resolve => resolve([]));
-
-        promises.forEach(promise => chainedPromise = chainedPromise
-            .then(result => promise
-                .then(item => Store.append<T>(item, result))
-            )
-        );
-
-        return chainedPromise;
-    }
-
-    private static append<T>(item: T, result: T[]): T[]
-    {
-        result.push(item);
-        return result;
     }
 }
