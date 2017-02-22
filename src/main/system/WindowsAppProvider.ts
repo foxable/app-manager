@@ -1,20 +1,22 @@
 /// <reference path="../main.d.ts"/>
 /// <reference path="../../shared.d.ts"/>
 
+import * as path from "path";
 import {spawn} from "child_process";
+import {app} from "electron";
 import {Promise} from "core-js";
 
 import Utils from "../Utils";
 
 export class WindowsAppProvider implements SystemAppProvider
 {
-    private properties = [
+    /*private properties = [
         { name: "DisplayName", as: "name" },
         { name: "DisplayVersion", as: "installedVersion" },
         { name: "Publisher", as: "publisher" },
         { name: "InstallDate", as: "installDate" }
     ];
-    private nonNullProperties = ["DisplayName"];
+    private nonNullProperties = ["DisplayName"];*/
     private systemApps: Promise<SystemApp[]> = null;
 
     public loadApps(forceReload: boolean): Promise<SystemApp[]>
@@ -31,10 +33,9 @@ export class WindowsAppProvider implements SystemAppProvider
     {
         return new Promise<SystemApp[]>((resolve, reject) =>
         {
-            // build ps arguments
-            const args = `Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${this.selectApps()} | ${this.filterApps()} | ConvertTo-Json`;
+            const psScript = path.join(app.getAppPath(), "scripts", "readSystemApps.ps1");
             // run ps command
-            const child = spawn("powershell.exe", [args]);
+            const child = spawn("PowerShell.exe", ["-ExecutionPolicy", "RemoteSigned", "-File", psScript]);
 
             child.stdout.on("data", data => resolve(Utils.parseJson<SystemApp[]>(data)));
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
@@ -43,7 +44,7 @@ export class WindowsAppProvider implements SystemAppProvider
         });
     }
 
-    private selectApps(): string
+    /*private selectApps(): string
     {
         const aliasedProperties = this.properties
             .map(property => this.alias(property.name, property.as))
@@ -68,5 +69,5 @@ export class WindowsAppProvider implements SystemAppProvider
     private notNull(property: string): string
     {
         return `{$_.${property} -ne $null}`;
-    }
+    }*/
 }
