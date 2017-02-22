@@ -10,13 +10,6 @@ import Utils from "../Utils";
 
 export class WindowsAppProvider implements SystemAppProvider
 {
-    /*private properties = [
-        { name: "DisplayName", as: "name" },
-        { name: "DisplayVersion", as: "installedVersion" },
-        { name: "Publisher", as: "publisher" },
-        { name: "InstallDate", as: "installDate" }
-    ];
-    private nonNullProperties = ["DisplayName"];*/
     private systemApps: Promise<SystemApp[]> = null;
 
     public loadApps(forceReload: boolean): Promise<SystemApp[]>
@@ -43,31 +36,4 @@ export class WindowsAppProvider implements SystemAppProvider
             child.stdin.end();
         });
     }
-
-    /*private selectApps(): string
-    {
-        const aliasedProperties = this.properties
-            .map(property => this.alias(property.name, property.as))
-            .join(", ");
-        return `Select-Object ${aliasedProperties}`;
-    }
-
-    private filterApps(): string
-    {
-        const filteredProperties = this.properties
-            .filter(property => this.nonNullProperties.find(name => name === property.name))
-            .map(property => this.notNull(property.as))
-            .join(", ");
-        return `Where-Object ${filteredProperties}`;
-    }
-
-    private alias(property: string, alias: string): string
-    {
-        return `@{name="${alias}";expression={$_.${property}}}`;
-    }
-
-    private notNull(property: string): string
-    {
-        return `{$_.${property} -ne $null}`;
-    }*/
 }
