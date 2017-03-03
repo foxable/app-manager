@@ -13,3 +13,6 @@ storage
 
 # Dependencies
 node_modules
+
+# Config
+.vscode
