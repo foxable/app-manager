@@ -1,13 +1,7 @@
-$icon-margin: 0.5rem;
-
-h1 {
-    margin-bottom: 1.5rem;
+.btn-group > :not(:last-child) {
+    margin-right: 0.5rem;
 }
 
-.icon-left {
-    margin-right: $icon-margin;
-}
-
-.icon-right {
-    margin-left: $icon-margin;
+.tab .active {
+    border-bottom: 2px solid #ffffff;
 }

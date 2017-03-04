@@ -1,16 +1,17 @@
 import * as React from "react";
+import {Link} from "react-router";
 
-import {NavBar,NavLink} from "./components";
+import {TabGroup,Tab} from "./components";
 
 export class App extends React.Component<undefined, undefined>
 {
     public render(): JSX.Element
     {
-        return <div className="container-fluid">
-                 <NavBar label="App Manager" color="inverse" fixed="top">
-                   <NavLink to="/installed-apps">Installed Apps</NavLink>
-                   <NavLink to="/registered-apps">Registered Apps</NavLink>
-                 </NavBar>
+        return <div>
+                <TabGroup className="light-blue darken-4 z-depth-1">
+                    <Tab><Link to="/installed-apps" activeClassName="active">Installed Apps</Link></Tab>
+                    <Tab><Link to="/registered-apps" activeClassName="active">Registered Apps</Link></Tab>
+                 </TabGroup>
                  {this.props.children}
                </div>;
     }

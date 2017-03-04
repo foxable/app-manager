@@ -4,7 +4,7 @@ import * as React from "react";
 import {ipcRenderer} from "electron";
 
 import {mainEvents,rendererEvents} from "../events";
-import {Page,Button,ButtonGroup,Icon,Table,TableColumn,TableRow} from "./components";
+import {Button,ButtonGroup,Icon,Table,TableColumn,TableRow} from "./components";
 
 interface RegisteredAppWithVersion extends RegisteredApp
 {
@@ -38,9 +38,7 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
 
     public render(): JSX.Element
     {
-        return <Page title="Registered Apps">
-                 <Table columns={this.columns} rows={this.rows}/>
-               </Page>;
+        return <Table columns={this.columns} rows={this.rows}/>;
     }
 
     private get rows(): TableRow[]
@@ -54,8 +52,8 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
     private rowActions(app: RegisteredAppWithVersion): JSX.Element
     {
         return <ButtonGroup>
-                 <Button onClick={() => {}}><Icon name="bookmark-o"/></Button>
-                 <Button onClick={() => {}}><Icon name="remove"/></Button>
+                 <Button type="floating" className="yellow darken-1" onClick={() => {}}><Icon name="bookmark_border" align="left"/>Bookmark</Button>
+                 <Button type="floating" className="red" onClick={() => {}}><Icon name="clear" align="left"/>Remove</Button>
                </ButtonGroup>;
     }
 

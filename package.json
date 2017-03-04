@@ -11,10 +11,9 @@
     "sass": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
     "cheerio": "^0.22.0",
     "classnames": "^2.2.5",
-    "font-awesome": "^4.6.3",
+    "materialize-css": "^0.98.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2"

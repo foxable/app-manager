@@ -1,40 +1,42 @@
 import * as React from "react";
-import * as classNames from "classnames";
+import * as classnames from "classnames";
 
-export type ButtonSize = "sm" | "md" | "lg";
-export type ButtonStyle = "primary" | "secondary" | "success" | "info" | "warning" | "danger" | "link";
+export type ButtonSize = "normal" | "large";
+export type ButtonType = "raised" | "floating" | "flat";
 export type ButtonState = "active" | "disabled";
 
 export interface ButtonProps
 {
-    state?: ButtonState;
-    style?: ButtonStyle;
     size?: ButtonSize;
-    outline?: boolean;
-    block?: boolean;
+    type?: ButtonType;
+    state?: ButtonState;
+    className?: string;
     onClick: () => void;
 }
 
 export class Button extends React.Component<ButtonProps, undefined>
 {
+    private static defaultSize: ButtonSize = "normal";
+    private static defaultType: ButtonType = "raised";
+    private static defaultState: ButtonState = "active";
+
     public render(): JSX.Element
     {
-        return <button onClick={() => this.props.onClick()} className={this.class}>
+        const state = this.props.state || Button.defaultState;
+        return <button onClick={() => this.props.onClick()} className={classnames(this.getBaseClass(), "waves-effect", "waves-light", { "disabled": state === "disabled" }, this.props.className)}>
                  {this.props.children}
                </button>;
     }
 
-    private get class(): string
+    private getBaseClass(): string
     {
-        const style = this.props.style || "secondary";
-        const size = this.props.size || "md";
+        const size = this.props.size || Button.defaultSize;
+        const type = this.props.type || Button.defaultType;
 
-        return classNames(
-            "btn",
-            this.props.outline ? `btn-outline-${style}` : `btn-${style}`,
-            { [`btn-${this.props.size}`]: size !== "md" },
-            this.props.state,
-            { "btn-block": this.props.block }
-        );
+        let baseClass = "btn";
+        if (type !== "raised") baseClass += `-${type}`;
+        if (size !== "normal") baseClass += `-${size}`;
+
+        return baseClass;
     }
 }

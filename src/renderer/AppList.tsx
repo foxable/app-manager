@@ -4,7 +4,7 @@ import * as React from "react";
 import {shell,ipcRenderer} from "electron";
 
 import {mainEvents,rendererEvents} from "../events";
-import {Page,Table,TableColumn,TableRow,Icon,Button,ButtonGroup} from "./components";
+import {Table,TableColumn,TableRow,Icon,Button,ButtonGroup} from "./components";
 
 export interface AppListState
 {
@@ -34,9 +34,7 @@ export class AppList extends React.Component<undefined, AppListState>
 
     public render(): JSX.Element
     {
-        return <Page title="Installed Apps">
-                 <Table columns={this.columns} rows={this.rows}/>
-               </Page>;
+        return <Table columns={this.columns} rows={this.rows}/>;
     }
 
     private get rows(): TableRow[]
@@ -50,8 +48,8 @@ export class AppList extends React.Component<undefined, AppListState>
     private rowActions(app: InstalledApp): JSX.Element
     {
         return <ButtonGroup>
-                 <Button onClick={() => shell.openExternal(app.downloadUrl)}><Icon name="download"/></Button>
-                 <Button onClick={() => shell.openExternal(app.websiteUrl)}><Icon name="globe"/></Button>
+                 <Button type="floating" className="green" onClick={() => shell.openExternal(app.downloadUrl)}><Icon name="get_app" align="left"/>Download</Button>
+                 <Button type="floating" className="blue" onClick={() => shell.openExternal(app.websiteUrl)}><Icon name="home" align="left"/>Website</Button>
                </ButtonGroup>;
     }
 
