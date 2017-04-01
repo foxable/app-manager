@@ -41,11 +41,18 @@ export class AppList extends React.Component<undefined, AppListState>
     {
         return this.state.apps.map(app => ({
             id: app.name.toLowerCase(),
-            cells: [app.name, app.installedVersion, this.rowActions(app)]
+            cells: [app.name, this.toVersionStatus(app), this.toRowActions(app)]
         }));
     }
 
-    private rowActions(app: InstalledApp): JSX.Element
+    private toVersionStatus(app: InstalledApp): JSX.Element
+    {
+        return <span className={app.isOutdated ? "yellow-text text-accent-4" : "green-text text-darken-4"}>
+                 {app.installedVersion}              
+               </span>;
+    }
+
+    private toRowActions(app: InstalledApp): JSX.Element
     {
         return <ButtonGroup>
                  <Button type="floating" className="green" onClick={() => shell.openExternal(app.downloadUrl)}><Icon name="get_app" align="left"/>Download</Button>

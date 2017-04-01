@@ -1,7 +1,7 @@
 declare interface SystemApp
 {
     readonly name: string;
-    readonly version: string;
+    readonly installedVersion: string;
 }
 
 declare interface SystemAppProvider

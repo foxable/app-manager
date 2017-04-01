@@ -9,5 +9,6 @@ declare interface RegisteredApp
 
 declare interface InstalledApp extends RegisteredApp
 {
-    readonly installedVersion: string;    
+    readonly installedVersion: string;
+    readonly isOutdated: boolean;   
 }
