@@ -29,10 +29,11 @@ export class WindowsAppProvider implements SystemAppProvider
             const psScript = path.join(app.getAppPath(), "scripts", "readSystemApps.ps1");
             // run ps command
             const child = spawn("PowerShell.exe", ["-ExecutionPolicy", "RemoteSigned", "-File", psScript]);
+            let result = "";
 
-            child.stdout.on("data", data => resolve(Utils.parseJson<SystemApp[]>(data)));
+            child.stdout.on("data", data => result += data.toString());
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
-            //child.on("exit", () => {});
+            child.on("exit", () => resolve(Utils.parseJson<SystemApp[]>(result)));
             child.stdin.end();
         });
     }
