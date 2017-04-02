@@ -7,5 +7,6 @@ export const mainEvents =
 export const rendererEvents =
 {
     installedAppsLoaded: "app-manager:installed-apps-loaded",
-    registeredAppsLoaded: "app-manager:registered-apps-loaded"
+    registeredAppsLoaded: "app-manager:registered-apps-loaded",
+    installedAppUpdated: "app-manager:installed-app-updated"
 };

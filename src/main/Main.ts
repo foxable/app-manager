@@ -85,25 +85,33 @@ export default class Main
         Promise.all([Main.systemAppProvider.loadApps(false), Main.appStore.loadApps(false)])
             .then(([systemApps, registeredApps]) =>
             {
-                const joinedApps = Utils.joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name));
+                const installedApps = Utils
+                    .joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name))
+                    .map(app => Main.initApp(app));
 
-                Promise.all(joinedApps.map(app => VersionProviderFactory.create(Main.appStore.loadVersionProvider(app.id)).getVersion()))
-                    .then(latestVersions =>
-                    {                        
-                        const installedApps = joinedApps.map((app, i) =>
-                        {
-                            const latestVersion = latestVersions[i];
-                            const isOutdated = new VersionComparer(app.installedVersion).isLesserThan(latestVersion);
-
-                            return { ...app, latestVersion, isOutdated };
-                        });
-                        event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
-                    });           
+                event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
+                // lazily load latest version
+                installedApps.forEach(app => Main.loadLatestVersion(event, app));  
             });
     }
 
     private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void
     {
         Main.appStore.loadApps(false).then(apps => event.sender.send(rendererEvents.registeredAppsLoaded, apps));
+    }
+
+    private static initApp(app: SystemApp & RegisteredApp): InstalledApp
+    {
+        return { ...app, latestVersion: null, isOutdated: false };
+    }
+
+    private static loadLatestVersion(event: Electron.IpcMainEvent, app: InstalledApp): void
+    {
+        const versionProvider = Main.appStore.loadVersionProvider(app.id);
+        VersionProviderFactory.create(versionProvider).getVersion().then(latestVersion =>
+        {
+            const isOutdated = new VersionComparer(app.installedVersion).isLesserThan(latestVersion);
+            event.sender.send(rendererEvents.installedAppUpdated, { ...app, latestVersion, isOutdated });
+        });            
     }
 }

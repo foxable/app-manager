@@ -25,6 +25,7 @@ export class AppList extends React.Component<undefined, AppListState>
         this.state = { apps: [] };
 
         ipcRenderer.on(rendererEvents.installedAppsLoaded, (event, apps) => this.onAppsLoaded(apps));
+        ipcRenderer.on(rendererEvents.installedAppUpdated, (event, app) => this.onVersionInfoLoaded(app));
     }
 
     public componentDidMount(): void
@@ -47,7 +48,12 @@ export class AppList extends React.Component<undefined, AppListState>
 
     private toVersionStatus(app: InstalledApp): JSX.Element
     {
-        return <span className={app.isOutdated ? "amber-text text-accent-4" : "green-text text-darken-4"}>
+        const versionClass = app.latestVersion != null
+            ? app.isOutdated
+                ? "amber-text text-accent-4"
+                : "green-text text-darken-4"
+            : "";
+        return <span className={versionClass}>
                  {app.installedVersion}              
                </span>;
     }
@@ -63,5 +69,12 @@ export class AppList extends React.Component<undefined, AppListState>
     private onAppsLoaded(apps: InstalledApp[]): void
     {
         this.setState({ apps: apps });
+    }
+
+    private onVersionInfoLoaded(app: InstalledApp): void
+    {
+        const appIndex = this.state.apps.findIndex(_ => _.id === app.id);
+        this.state.apps[appIndex] = app;
+        this.setState({ apps: this.state.apps });
     }
 }
