@@ -7,6 +7,7 @@ import {BrowserWindow,ipcMain} from "electron";
 import {mainEvents,rendererEvents} from "../events";
 import {AppStore} from "./store/AppStore";
 import {WindowsAppProvider} from "./system/WindowsAppProvider";
+import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
 import VersionComparer from "./VersionComparer";
 import Utils from "./Utils";
 
@@ -84,11 +85,20 @@ export default class Main
         Promise.all([Main.systemAppProvider.loadApps(false), Main.appStore.loadApps(false)])
             .then(([systemApps, registeredApps]) =>
             {
-                const installedApps = Utils
-                    .joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name))
-                    .map(app => ({ ...app, isOutdated: new VersionComparer(app.installedVersion).isLesserThan(app.latestVersion)}));
+                const joinedApps = Utils.joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name));
 
-                event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
+                Promise.all(joinedApps.map(app => VersionProviderFactory.create(Main.appStore.loadVersionProvider(app.id)).getVersion()))
+                    .then(latestVersions =>
+                    {                        
+                        const installedApps = joinedApps.map((app, i) =>
+                        {
+                            const latestVersion = latestVersions[i];
+                            const isOutdated = new VersionComparer(app.installedVersion).isLesserThan(latestVersion);
+
+                            return { ...app, latestVersion, isOutdated };
+                        });
+                        event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
+                    });           
             });
     }
 

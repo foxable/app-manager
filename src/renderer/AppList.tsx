@@ -47,7 +47,7 @@ export class AppList extends React.Component<undefined, AppListState>
 
     private toVersionStatus(app: InstalledApp): JSX.Element
     {
-        return <span className={app.isOutdated ? "yellow-text text-accent-4" : "green-text text-darken-4"}>
+        return <span className={app.isOutdated ? "amber-text text-accent-4" : "green-text text-darken-4"}>
                  {app.installedVersion}              
                </span>;
     }
