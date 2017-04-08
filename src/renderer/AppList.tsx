@@ -53,7 +53,7 @@ export class AppList extends React.Component<undefined, AppListState>
                 ? "amber-text text-accent-4"
                 : "green-text text-darken-4"
             : "";
-        return <span className={versionClass}>
+        return <span className={versionClass} title={app.isOutdated ? `Aktuell: ${app.latestVersion}` : ""}>
                  {app.installedVersion}              
                </span>;
     }
