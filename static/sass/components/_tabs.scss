@@ -1,0 +1,41 @@
+@import "../base/_variables.scss";
+
+.tabs {
+    display: flex;
+    margin: 0 auto;
+    padding-left: 0;
+    list-style-type: none;
+    color: white;
+    background-color: $dark-blue;
+    box-shadow: 0 2px 2px 0 $shadow-color;
+    height: 40px;
+    margin-bottom: 10px;
+
+    .tab {
+        flex-grow: 1;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+        text-transform: uppercase;
+        line-height: 38px;
+        height: 38px;        
+
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transition: color .25s ease, border-color .5s ease;
+            border-bottom: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.7);
+
+            &:hover {
+                color: #ffffff;
+            }
+
+            &.active {
+                color: #ffffff;
+                border-color: #ffffff;
+            }
+        }
+    }
+}

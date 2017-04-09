@@ -22,7 +22,7 @@ export class Table extends React.Component<TableProps, undefined>
 {
     public render(): JSX.Element
     {
-        return <table className="highlight">
+        return <table>
                  <thead>
                    <tr>
                      {this.props.columns.map(column => <th key={column.id}>{column.label}</th>)}

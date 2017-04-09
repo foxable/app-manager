@@ -1,0 +1,9 @@
+@import "../base/_variables.scss";
+
+.is-up-to-date {
+    color: $dark-green;
+}
+
+.is-outdated {
+    color: $dark-yellow;
+}

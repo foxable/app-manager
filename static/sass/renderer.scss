@@ -1,7 +1,9 @@
+@import "./base/_base.scss";
+
+@import "./components/_table.scss";
+@import "./components/_tabs.scss";
+@import "./components/_apps.scss";
+
 .btn-group > :not(:last-child) {
     margin-right: 0.5rem;
-}
-
-.tab .active {
-    border-bottom: 2px solid #ffffff;
 }

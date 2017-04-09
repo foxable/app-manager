@@ -13,7 +13,6 @@
   "dependencies": {
     "cheerio": "0.*",
     "classnames": "2.*",
-    "materialize-css": "0.*",
     "react": "15.*",
     "react-dom": "15.*",
     "react-router": "3.*"

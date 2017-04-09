@@ -50,10 +50,10 @@ export class AppList extends React.Component<undefined, AppListState>
     {
         const versionClass = app.latestVersion != null
             ? app.isOutdated
-                ? "amber-text text-accent-4"
-                : "green-text text-darken-4"
+                ? "is-outdated"
+                : "is-up-to-date"
             : "";
-        return <span className={versionClass} title={app.isOutdated ? `Aktuell: ${app.latestVersion}` : ""}>
+        return <span className={versionClass} title={app.isOutdated ? `Latest: ${app.latestVersion}` : ""}>
                  {app.installedVersion}              
                </span>;
     }

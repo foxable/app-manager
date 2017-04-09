@@ -1,0 +1,12 @@
+@import "_variables.scss";
+
+* {
+    font-family: $font-family;
+    padding: 0;
+    margin: 0;
+}
+
+a, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
