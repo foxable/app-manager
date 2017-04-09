@@ -11,26 +11,25 @@
     "sass": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
   },
   "dependencies": {
-    "cheerio": "^0.22.0",
-    "classnames": "^2.2.5",
-    "materialize-css": "^0.98.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-router": "^3.0.2"
+    "cheerio": "0.*",
+    "classnames": "2.*",
+    "materialize-css": "0.*",
+    "react": "15.*",
+    "react-dom": "15.*",
+    "react-router": "3.*"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.17.31",
-    "@types/classnames": "0.0.32",
-    "@types/core-js": "^0.9.35",
-    "@types/electron": "^1.4.31",
-    "@types/node": "^7.0.5",
-    "@types/react": "^0.14.47",
-    "@types/react-dom": "^0.14.18",
-    "@types/react-router": "^3.0.3",
-    "bootstrap-sass": "^3.3.0",
-    "core-js": "^2.4.1",
-    "electron": "^1.5.0",
-    "source-map-loader": "^0.1.5",
-    "ts-loader": "^1.2.0"
+    "@types/cheerio": "0.*",
+    "@types/classnames": "0.*",
+    "@types/core-js": "0.*",
+    "@types/electron": "1.*",
+    "@types/node": "7.*",
+    "@types/react": "15.*",
+    "@types/react-dom": "0.*",
+    "@types/react-router": "4.*",
+    "core-js": "2.*",
+    "electron": "1.6.*",
+    "source-map-loader": "0.2.*",
+    "ts-loader": "2.*"
   }
 }
