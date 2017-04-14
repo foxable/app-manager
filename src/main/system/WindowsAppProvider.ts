@@ -4,7 +4,6 @@
 import * as path from "path";
 import {spawn} from "child_process";
 import {app} from "electron";
-import {Promise} from "core-js";
 
 import Utils from "../Utils";
 

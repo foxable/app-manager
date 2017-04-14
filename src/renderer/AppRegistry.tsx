@@ -2,17 +2,21 @@
 
 import * as React from "react";
 import {ipcRenderer} from "electron";
-import {Map} from "core-js";
+import {RouteComponentProps} from "react-router-dom";
 
 import {mainEvents,rendererEvents} from "../events";
 import {Button,ButtonGroup,Icon,Table,TableColumn,TableRow} from "./components";
+
+export interface AppRegistryProps extends RouteComponentProps<AppRegistryProps>
+{
+}
 
 export interface AppRegistryState
 {
     apps: RegisteredApp[];
 }
 
-export class AppRegistry extends React.Component<undefined, AppRegistryState>
+export class AppRegistry extends React.Component<AppRegistryProps, AppRegistryState>
 {
     private columns: TableColumn[] = [
         { id: "name", label: "Name" },

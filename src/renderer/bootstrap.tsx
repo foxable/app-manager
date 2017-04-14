@@ -1,18 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {Router,Route,IndexRedirect,hashHistory} from "react-router";
+import {HashRouter} from "react-router-dom";
 
 import {App} from "./App";
-import {AppList} from "./AppList";
-import {AppRegistry} from "./AppRegistry";
 
 ReactDOM.render(
-    <Router history={hashHistory}>
-      <Route path="/" component={App}>
-        <IndexRedirect to="/installed-apps"/>
-        <Route path="/installed-apps" component={AppList}/>
-        <Route path="/registered-apps" component={AppRegistry}/>
-      </Route>
-    </Router>,
+    <HashRouter>
+      <App/>
+    </HashRouter>,
     document.getElementById("app-manager-root")
 );

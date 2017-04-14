@@ -2,17 +2,21 @@
 
 import * as React from "react";
 import {shell,ipcRenderer} from "electron";
-import {Map} from "core-js";
+import {RouteComponentProps} from "react-router-dom";
 
 import {mainEvents,rendererEvents} from "../events";
 import {Table,TableColumn,TableRow,Icon,Button,ButtonGroup} from "./components";
+
+export interface AppListProps extends RouteComponentProps<AppListProps>
+{
+}
 
 export interface AppListState
 {
     apps: InstalledApp[];
 }
 
-export class AppList extends React.Component<undefined, AppListState>
+export class AppList extends React.Component<AppListProps, AppListState>
 {
     private columns: TableColumn[] = [
         { id: "name", label: "Name" },
@@ -88,7 +92,7 @@ export class AppList extends React.Component<undefined, AppListState>
 
     private handleVersionInfoLoaded(app: InstalledApp): void
     {
-        this.setState(prevState => { apps: this.updateAppInState(app, prevState) });
+        this.setState(prevState => ({ apps: this.updateAppInState(app, prevState) }));
     }
 
     private updateAppInState(app: InstalledApp, state: AppListState): InstalledApp[]
