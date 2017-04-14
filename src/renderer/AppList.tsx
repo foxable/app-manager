@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {shell,ipcRenderer} from "electron";
+import {Map} from "core-js";
 
 import {mainEvents,rendererEvents} from "../events";
 import {Table,TableColumn,TableRow,Icon,Button,ButtonGroup} from "./components";
@@ -19,18 +20,26 @@ export class AppList extends React.Component<undefined, AppListState>
         { id: "actions", label: "Actions" }
     ];
 
+    private eventListeners = new Map<string, Electron.IpcRendererEventListener>();
+
     public constructor()
     {
         super();
         this.state = { apps: [] };
 
-        ipcRenderer.on(rendererEvents.installedAppsLoaded, (event, apps) => this.onAppsLoaded(apps));
-        ipcRenderer.on(rendererEvents.installedAppUpdated, (event, app) => this.onVersionInfoLoaded(app));
+        this.registerEventListener(rendererEvents.installedAppsLoaded, (event, apps) => this.handleAppsLoaded(apps));
+        this.registerEventListener(rendererEvents.installedAppUpdated, (event, app) => this.handleVersionInfoLoaded(app));
     }
 
     public componentDidMount(): void
     {
         ipcRenderer.send(mainEvents.loadInstalledApps);
+    }
+
+    public componentWillUnmount(): void
+    {
+        this.eventListeners.forEach((eventListener, channel) => ipcRenderer.removeListener(channel, eventListener));
+        this.eventListeners.clear();
     }
 
     public render(): JSX.Element
@@ -66,15 +75,26 @@ export class AppList extends React.Component<undefined, AppListState>
                </ButtonGroup>;
     }
 
-    private onAppsLoaded(apps: InstalledApp[]): void
+    private registerEventListener(channel: string, eventListener: Electron.IpcRendererEventListener): void
+    {
+        this.eventListeners.set(channel, eventListener);
+        ipcRenderer.on(channel, eventListener);
+    }
+
+    private handleAppsLoaded(apps: InstalledApp[]): void
     {
         this.setState({ apps: apps });
     }
 
-    private onVersionInfoLoaded(app: InstalledApp): void
+    private handleVersionInfoLoaded(app: InstalledApp): void
     {
-        const appIndex = this.state.apps.findIndex(_ => _.id === app.id);
-        this.state.apps[appIndex] = app;
-        this.setState({ apps: this.state.apps });
+        this.setState(prevState => { apps: this.updateAppInState(app, prevState) });
+    }
+
+    private updateAppInState(app: InstalledApp, state: AppListState): InstalledApp[]
+    {
+        const appIndex = state.apps.findIndex(_ => _.id === app.id);
+        state.apps[appIndex] = app;
+        return state.apps;
     }
 }

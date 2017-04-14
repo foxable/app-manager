@@ -2,18 +2,14 @@
 
 import * as React from "react";
 import {ipcRenderer} from "electron";
+import {Map} from "core-js";
 
 import {mainEvents,rendererEvents} from "../events";
 import {Button,ButtonGroup,Icon,Table,TableColumn,TableRow} from "./components";
 
-interface RegisteredAppWithVersion extends RegisteredApp
-{
-    latestVersion: string;
-}
-
 export interface AppRegistryState
 {
-    apps: RegisteredAppWithVersion[];
+    apps: RegisteredApp[];
 }
 
 export class AppRegistry extends React.Component<undefined, AppRegistryState>
@@ -23,17 +19,25 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         { id: "actions", label: "Actions" }
     ];
 
+    private eventListeners = new Map<string, Electron.IpcRendererEventListener>();
+
     public constructor()
     {
         super();
         this.state = { apps: [] };
-
-        ipcRenderer.on(rendererEvents.registeredAppsLoaded, (event, apps) => this.onAppsLoaded(apps));
+        
+        this.registerEventListener(rendererEvents.registeredAppsLoaded, (event, apps) => this.handleAppsLoaded(apps));
     }
 
     public componentDidMount(): void
     {
         ipcRenderer.send(mainEvents.loadRegisteredApps);
+    }
+
+    public componentWillUnmount(): void
+    {
+        this.eventListeners.forEach((eventListener, channel) => ipcRenderer.removeListener(channel, eventListener));
+        this.eventListeners.clear();
     }
 
     public render(): JSX.Element
@@ -49,7 +53,7 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
         }));
     }
 
-    private rowActions(app: RegisteredAppWithVersion): JSX.Element
+    private rowActions(app: RegisteredApp): JSX.Element
     {
         return <ButtonGroup>
                  <Button type="floating" className="yellow darken-1" onClick={() => {}}><Icon name="bookmark_border" align="left"/>Bookmark</Button>
@@ -57,8 +61,14 @@ export class AppRegistry extends React.Component<undefined, AppRegistryState>
                </ButtonGroup>;
     }
 
-    private onAppsLoaded(apps: RegisteredAppWithVersion[]): void
+    private registerEventListener(channel: string, eventListener: Electron.IpcRendererEventListener): void
     {
-        this.setState({ apps: apps.map(app => ({ ...app, latestVersion: "" })) });
+        this.eventListeners.set(channel, eventListener);
+        ipcRenderer.on(channel, eventListener);
+    }
+
+    private handleAppsLoaded(apps: RegisteredApp[]): void
+    {
+        this.setState({ apps: apps });
     }
 }
