@@ -60,8 +60,8 @@ export class AppRegistry extends React.Component<AppRegistryProps, AppRegistrySt
     private rowActions(app: RegisteredApp): JSX.Element
     {
         return <ButtonGroup>
-                 <Button type="floating" className="yellow darken-1" onClick={() => {}}><Icon name="bookmark_border" align="left"/>Bookmark</Button>
-                 <Button type="floating" className="red" onClick={() => {}}><Icon name="clear" align="left"/>Remove</Button>
+                 <Button onClick={() => {}}><Icon name="bookmark_border"/>Bookmark</Button>
+                 <Button onClick={() => {}}><Icon name="clear"/>Remove</Button>
                </ButtonGroup>;
     }
 

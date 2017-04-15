@@ -74,8 +74,8 @@ export class AppList extends React.Component<AppListProps, AppListState>
     private toRowActions(app: InstalledApp): JSX.Element
     {
         return <ButtonGroup>
-                 <Button type="floating" className="green" onClick={() => shell.openExternal(app.downloadUrl)}><Icon name="get_app" align="left"/>Download</Button>
-                 <Button type="floating" className="blue" onClick={() => shell.openExternal(app.websiteUrl)}><Icon name="home" align="left"/>Website</Button>
+                 <Button onClick={() => this.openLink(app.downloadUrl)}><Icon name="get_app"/>Download</Button>
+                 <Button onClick={() => this.openLink(app.websiteUrl)}><Icon name="home"/>Website</Button>
                </ButtonGroup>;
     }
 
@@ -100,5 +100,10 @@ export class AppList extends React.Component<AppListProps, AppListState>
         const appIndex = state.apps.findIndex(_ => _.id === app.id);
         state.apps[appIndex] = app;
         return state.apps;
+    }
+
+    private openLink(url: string): void
+    {
+        shell.openExternal(url);
     }
 }

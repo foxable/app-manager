@@ -8,7 +8,7 @@
     "start": "electron .",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "sass": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
+    "sass-compile": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
   },
   "dependencies": {
     "cheerio": "0.*",
@@ -27,6 +27,7 @@
     "@types/react-router": "4.*",
     "@types/react-router-dom": "4.*",
     "electron": "1.6.*",
+    "node-sass": "4.*",
     "source-map-loader": "0.2.*",
     "ts-loader": "2.*"
   }

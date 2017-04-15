@@ -1,0 +1,34 @@
+@import "../base/_variables.scss";
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+
+    & > .btn:not(:last-child) {
+        margin-right: 5px;
+    }
+}
+
+.btn {
+    flex: 0 0 auto;
+    color: white;
+    background-color: #1565C0;
+    padding: 0 10px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    line-height: 30px;
+    transition: background-color .5s ease;
+
+    &:hover {
+        background-color: $dark-blue;
+    }
+
+    .icon {
+        float: left;
+        font-size: 18px;
+        line-height: 30px;
+        margin-right: 5px;
+    }
+}

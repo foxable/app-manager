@@ -2,8 +2,5 @@
 
 @import "./components/_table.scss";
 @import "./components/_tabs.scss";
+@import "./components/_buttons.scss";
 @import "./components/_apps.scss";
-
-.btn-group > :not(:last-child) {
-    margin-right: 0.5rem;
-}
