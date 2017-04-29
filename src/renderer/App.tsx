@@ -9,7 +9,7 @@ export class App extends React.Component<undefined, undefined>
     public render(): JSX.Element
     {
         return <div>
-                 <Menu>
+                 <Menu fixed="top">
                    <NavLink to="/installed-apps" className="item" activeClassName="active"><Icon name="desktop"/> Installed Apps</NavLink>
                    <Menu.Item disabled><Icon name="browser"/> Web Apps</Menu.Item>                    
                  </Menu>                 

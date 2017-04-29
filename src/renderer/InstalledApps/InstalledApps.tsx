@@ -45,9 +45,9 @@ export class InstalledApps extends React.Component<InstalledAppsProps, Installed
 
     public render(): JSX.Element
     {
-        return <div>
-                 <Header as="h1" attached="top"><Icon name="desktop"/> Installed Apps</Header>
-                 <Segment attached loading={this.appsLoading}>                 
+        return <div className="content">
+                 <Header as="h1" dividing><Icon name="desktop"/> Installed Apps</Header>
+                 <Segment basic loading={this.appsLoading}>                 
                    {this.state.apps.length === 0
                       ? <Message>No installed apps found.</Message>
                       : <InstalledAppsTable apps={this.state.apps}/>}

@@ -1,3 +1,15 @@
 body > .ui.container {
     padding-top: 1rem;
 }
+
+.content {
+    margin-top: 3.5rem;
+
+    .header {
+        margin-bottom: 0;
+    }
+
+    .segment {
+        margin-top: 0;
+    }
+}
