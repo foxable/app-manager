@@ -15,7 +15,9 @@
     "classnames": "2.*",
     "react": "15.*",
     "react-dom": "15.*",
-    "react-router-dom": "4.*"
+    "react-router-dom": "4.*",
+    "semantic-ui-css": "2.*",
+    "semantic-ui-react": "0.*"
   },
   "devDependencies": {
     "@types/cheerio": "0.*",

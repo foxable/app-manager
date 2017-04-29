@@ -1,6 +1,3 @@
-@import "./base/_base.scss";
-
-@import "./components/_table.scss";
-@import "./components/_tabs.scss";
-@import "./components/_buttons.scss";
-@import "./components/_apps.scss";
+body > .ui.container {
+    padding-top: 1rem;
+}

@@ -1,22 +1,20 @@
 import * as React from "react";
 import {Switch,Route,Redirect,NavLink} from "react-router-dom";
+import {Menu,Icon} from "semantic-ui-react";
 
-import {TabGroup,Tab} from "./components";
-import {AppList} from "./AppList";
-import {AppRegistry} from "./AppRegistry";
+import {InstalledApps} from "./InstalledApps/InstalledApps";
 
 export class App extends React.Component<undefined, undefined>
 {
     public render(): JSX.Element
     {
         return <div>
-                 <TabGroup className="light-blue darken-4 z-depth-1">
-                    <Tab><NavLink to="/installed-apps" activeClassName="active">Installed Apps</NavLink></Tab>
-                    <Tab><NavLink to="/registered-apps" activeClassName="active">Registered Apps</NavLink></Tab>
-                 </TabGroup>
+                 <Menu>
+                   <NavLink to="/installed-apps" className="item" activeClassName="active"><Icon name="desktop"/> Installed Apps</NavLink>
+                   <Menu.Item disabled><Icon name="browser"/> Web Apps</Menu.Item>                    
+                 </Menu>                 
                  <Switch>   
-                    <Route path="/installed-apps" component={AppList}/>
-                    <Route path="/registered-apps" component={AppRegistry}/>
+                    <Route path="/installed-apps" component={InstalledApps}/>
                     <Redirect to="/installed-apps"/>    
                  </Switch>  
                </div>;
