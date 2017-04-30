@@ -16,7 +16,7 @@ export class AppStore
     {
         if (this.registeredApps == null || forceReload)
         {
-            this.registeredApps = Store.readJsonFiles<RegisteredApp>(this.appsPath, appId => this.loadApp(appId));
+            this.registeredApps = Store.readJsonFiles<AppDescription>(this.appsPath, appId => this.loadApp(appId));
         }
 
         return this.registeredApps;
@@ -24,7 +24,8 @@ export class AppStore
 
     public loadApp(appId: string): Promise<RegisteredApp>
     {
-        return Store.readJsonFile<RegisteredApp>(this.getAppPath("app.json", appId));
+        return Store.readJsonFile<AppDescription>(this.getAppPath("app.json", appId))
+            .then(app => ({ ...app, id: appId }));
     }
 
     public loadVersionProvider(appId: string): VersionProvider

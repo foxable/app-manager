@@ -1,3 +1,10 @@
+declare interface AppDescription
+{
+    readonly name: string;
+    readonly websiteUrl: string;
+    readonly downloadUrl: string;    
+}
+
 declare interface SystemApp
 {
     readonly name: string;
