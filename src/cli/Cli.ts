@@ -5,10 +5,23 @@ import {VersionProviderFactory} from "../main/version-provider/VersionProviderFa
 
 const appStore = new AppStore(path.join(__dirname, "..", "..", "..", "storage", "apps"));
 
-function getLatestVersion(appId: string): Promise<string>
+function toTimeDiff(tStart: [number, number]): string
 {
+    let seconds: number, nanos: number;
+    [seconds, nanos] = process.hrtime(tStart);
+    const millis = seconds * 1e3 + Math.floor(nanos / 1e6);
+
+    return `${millis} ms`;
+}
+
+function getLatestVersion(appId: string): void
+{
+    const tStart = process.hrtime();
     const versionProvider = appStore.loadVersionProvider(appId);    
-    return VersionProviderFactory.create(versionProvider).getVersion();
+    
+    VersionProviderFactory.create(versionProvider).getVersion()
+        .then(version => console.log(`${version} | ${toTimeDiff(tStart)}`))
+        .catch(reason => console.log(`Error: ${reason}`))
 }
 
 program
@@ -16,9 +29,6 @@ program
 
 program
     .command("latest-version <appId>")
-    .action((appId, options) => getLatestVersion(appId)
-        .then(version => console.log(version))
-        .catch(() => console.log("Unable to retrieve version for app"))
-    );
+    .action((appId, options) => getLatestVersion(appId));
 
 program.parse(process.argv);
