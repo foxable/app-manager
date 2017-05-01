@@ -4,6 +4,8 @@ import * as http from "http";
 import * as https from "https";
 import * as cheerio from "cheerio";
 
+import {registerCheerioPlugins} from "./CheerioPlugins";
+
 export class HtmlVersionProviderAdapter implements VersionProviderAdapter
 {
     public constructor(private readonly versionProvider: HtmlVersionProvider)
@@ -13,7 +15,7 @@ export class HtmlVersionProviderAdapter implements VersionProviderAdapter
     public getVersion(): Promise<string>
     {
         return this.getHtmlContent(this.versionProvider.url)
-            .then(htmlContent => this.versionProvider.getVersion(cheerio.load(htmlContent)));
+            .then(htmlContent => this.runVersionProvider(htmlContent));
     }
 
     public getHtmlContent(url: string): Promise<string>
@@ -53,5 +55,17 @@ export class HtmlVersionProviderAdapter implements VersionProviderAdapter
             res.on("data", (chunk) => rawData += chunk);
             res.on('end', () => resolve(rawData));
         });
+    }
+
+    private runVersionProvider(htmlContent: string): string
+    {
+        return this.versionProvider.getVersion(this.load(htmlContent));
+    }
+
+    private load(htmlContent: string): CheerioStatic
+    {
+        const $ = cheerio.load(htmlContent);
+        registerCheerioPlugins($);
+        return $;
     }
 }
