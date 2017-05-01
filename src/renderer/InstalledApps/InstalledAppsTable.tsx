@@ -32,11 +32,11 @@ export class InstalledAppsTable extends React.Component<InstalledAppsTableProps,
     private renderOutdatedWarning(app: InstalledApp): JSX.Element
     {
         return <Popup
-                 trigger={<Icon name="attention"/>}
+                 trigger={<Icon name="attention"/> }
                  content={`Latest: ${app.latestVersion}`}
                  on="hover"
                  position="left center"
-               />
+               />;
     }
 
     private openLink(url: string): void
