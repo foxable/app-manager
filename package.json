@@ -1,6 +1,6 @@
 {
   "name": "foxable-app-manager",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "An app manager for Windows",
   "main": "dist/js/main/bootstrap.js",
   "private": true,
@@ -9,6 +9,9 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "sass-compile": "node-sass --include-path static/sass static/sass/renderer.scss dist/css/renderer.css"
+  },
+  "bin": {
+    "app-manager": "./bin/cli"
   },
   "dependencies": {
     "cheerio": "0.*",
