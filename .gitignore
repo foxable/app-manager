@@ -8,6 +8,9 @@ dist
 # Docs
 docs
 
+# Development
+devtools
+
 # Dependencies
 node_modules
 

@@ -33,6 +33,7 @@
     "@types/react-router": "4.*",
     "@types/react-router-dom": "4.*",
     "commander": "2.*",
+    "devtron": "^1.4.0",
     "electron": "1.6.*",
     "node-sass": "4.*",
     "source-map-loader": "0.2.*",

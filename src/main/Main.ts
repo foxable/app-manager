@@ -15,7 +15,7 @@ export default class Main
 {
     public static mainWindow: Electron.BrowserWindow;
     private static app: Electron.App;
-    public static BrowserWindow: any;
+    public static BrowserWindow: typeof BrowserWindow;
 
     private static appStore: AppStore;
     private static systemAppProvider: SystemAppProvider;
@@ -44,6 +44,7 @@ export default class Main
 
     private static onReady(): void
     {
+        Main.BrowserWindow.removeDevToolsExtension("fmkadmapgofadopljbjfkapdkoienihi");
         // Create the browser window.
         Main.mainWindow = new Main.BrowserWindow({width: 800, height: 600});
         // and load the index.html of the app.
