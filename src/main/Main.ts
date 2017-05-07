@@ -2,34 +2,26 @@
 
 import * as url from "url";
 import * as path from "path";
-import {BrowserWindow,ipcMain} from "electron";
 
-import Events from "../events";
-import AppRegistry from "./registry/AppRegistry";
-import {WindowsAppProvider} from "./system/WindowsAppProvider";
-import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
-import VersionComparer from "./VersionComparer";
-import Utils from "./Utils";
+import {BrowserWindow} from "electron";
+import {Store} from "redux";
 
 export default class Main
 {
-    public static mainWindow: Electron.BrowserWindow;
-    private static app: Electron.App;
-    public static BrowserWindow: typeof BrowserWindow;
+    private static BrowserWindow: typeof BrowserWindow;
 
-    private static appRegistry: AppRegistry;
-    private static systemAppProvider: SystemAppProvider;
+    private static mainWindow: Electron.BrowserWindow;
+    private static app: Electron.App;  
+    private static store: Store<AppState>;
 
-    public static main(app: Electron.App, browserWindow: typeof BrowserWindow)
-    {
+    private static openDevTools: boolean;
+
+    public static main(app: Electron.App, browserWindow: typeof BrowserWindow, store: Store<AppState>, openDevTools: boolean)
+    {        
+        Main.app = app;
         Main.BrowserWindow = browserWindow;
-        Main.app = app;        
-        // init registry
-        const appsPath = path.join(Main.app.getAppPath(), "storage", "apps");
-        Main.appRegistry = new AppRegistry(appsPath);
-        // init system app provider
-        Main.systemAppProvider = new WindowsAppProvider();
-
+        Main.store = store;
+        Main.openDevTools = openDevTools;
         // This method will be called when Electron has finished
         // initialization and is ready to create browser windows.
         // Some APIs can only be used after this event occurs.
@@ -37,14 +29,13 @@ export default class Main
         // Quit when all windows are closed.
         Main.app.on("window-all-closed", Main.onWindowAllClosed);
         Main.app.on("activate", Main.onActivate);
-        // register renderer messages
-        ipcMain.on(Events.FETCH_INSTALLED_APPS, Main.onLoadInstalledApps);
     }
 
     private static onReady(): void
     {
         // Create the browser window.
         Main.mainWindow = new Main.BrowserWindow({width: 800, height: 600});
+        if (Main.openDevTools) Main.mainWindow.webContents.openDevTools();
         // and load the index.html of the app.
         Main.mainWindow.loadURL(url.format({
             pathname: path.join(Main.app.getAppPath(), "static", "index.html"),
@@ -77,35 +68,5 @@ export default class Main
         // to stay active until the user quits explicitly with Cmd + Q
         if (process.platform !== "darwin")
             Main.app.quit();
-    }
-
-    private static onLoadInstalledApps(event: Electron.IpcMainEvent): void
-    {
-        Promise.all([Main.systemAppProvider.loadApps(false), Main.appRegistry.loadApps(false)])
-            .then(([systemApps, registeredApps]) =>
-            {
-                const installedApps = Utils
-                    .joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name))
-                    .map(app => Main.initApp(app));
-
-                event.sender.send(Events.INSTALLED_APPS_FETCHED, <InstalledAppsFetchedParam>installedApps);
-                // lazily load latest version
-                installedApps.forEach(app => Main.loadLatestVersion(event, app));  
-            });
-    }
-
-    private static initApp(app: SystemApp & RegisteredApp): InstalledApp
-    {
-        return { ...app, latestVersion: null, isOutdated: false };
-    }
-
-    private static loadLatestVersion(event: Electron.IpcMainEvent, app: InstalledApp): void
-    {
-        const versionProvider = Main.appRegistry.loadVersionProvider(app.id);
-        VersionProviderFactory.create(versionProvider).getVersion().then(latestVersion =>
-        {
-            const isOutdated = new VersionComparer(app.installedVersion).isLesserThan(latestVersion);
-            event.sender.send(Events.LATEST_VERSION_FETCHED, <LatestVersionFetchedParam>{ id: app.id, latestVersion, isOutdated });
-        });            
-    }
+    }    
 }

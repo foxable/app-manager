@@ -1,11 +1,7 @@
-/// <reference path="../../shared.d.ts"/>
-
-import {ipcRenderer} from "electron";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 
-import Events from "../../events";
-import {loadInstalledApps} from "../store/actionCreators";
+import {requestInstalledApps,requestLatestVersion} from "../../store";
 import {InstalledApps,InstalledAppsProps} from "./InstalledApps";
 
 function mapStateToProps(state: AppState)
@@ -16,11 +12,9 @@ function mapStateToProps(state: AppState)
 function mapStateToDispatch(dispatch: Dispatch<AppState>)
 {
     return {
-        onLoadApps: () => {
-            dispatch(loadInstalledApps());
-            ipcRenderer.send(Events.FETCH_INSTALLED_APPS);
-        }
+        onReady: () => dispatch(requestInstalledApps()),
+        onRefreshLatestVersion: (appId: string) => dispatch(requestLatestVersion(appId))
     };
 }
 
-export default connect<AppState["installedApps"], {}, InstalledAppsProps>(mapStateToProps, mapStateToDispatch)(InstalledApps);
+export default connect<InstalledAppsState, {}, InstalledAppsProps>(mapStateToProps, mapStateToDispatch)(InstalledApps);

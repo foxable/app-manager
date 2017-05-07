@@ -13,16 +13,24 @@ declare interface InstalledApp extends RegisteredApp
     readonly isOutdated: boolean;
 }
 
-// Event Parameters
-declare interface FetchInstalledAppsParam 
-{    
+declare interface Action
+{
+    type: string;
+    isLocalScope?: boolean;
 }
 
-declare type InstalledAppsFetchedParam = InstalledApp[];
-
-declare interface LatestVersionFetchedParam
+declare interface AppState
 {
-    id: string;
-    latestVersion: string;
-    isOutdated: boolean;
+    installedApps: InstalledAppsState;
+}
+
+declare interface InstalledAppsState
+{
+    isFetching: boolean;
+    apps: InstalledAppState[];
+}
+
+declare interface InstalledAppState extends InstalledApp
+{
+    isFetchingVersion: boolean;
 }

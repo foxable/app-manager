@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as program from "commander";
 import AppRegistry from "../main/registry/AppRegistry";
-import {VersionProviderFactory} from "../main/version-provider/VersionProviderFactory";
+import VersionProviderFactory from "../main/version-provider/VersionProviderFactory";
 
 const appRegistry = new AppRegistry(path.join(__dirname, "..", "..", "..", "storage", "apps"));
 

@@ -2,7 +2,7 @@
 
 import {HtmlVersionProviderAdapter} from "./HtmlVersionProviderAdapter";
 
-export class VersionProviderFactory
+export default class VersionProviderFactory
 {
     public static create(versionProvider: VersionProvider): VersionProviderAdapter
     {

@@ -1,20 +1,15 @@
-import {ipcRenderer} from "electron";
-import {createStore} from "redux";
+import {createStore,applyMiddleware} from "redux";
 
 import * as React from "react";
 import {Provider} from "react-redux";
 import * as ReactDOM from "react-dom";
 import {HashRouter} from "react-router-dom";
 
-import Events from "../events";
-import {updateInstalledApps,updateLatestVersion} from "./store/actionCreators";
-import {reducer,initialState} from "./store/reducer";
+import {appReducer,initialAppState,forwardToMain,replayActionRenderer} from "../store";
 import {App} from "./App";
 
-const store = createStore<AppState>(reducer, initialState);
-// register events
-ipcRenderer.on(Events.INSTALLED_APPS_FETCHED, (_, apps: InstalledAppsFetchedParam) => store.dispatch(updateInstalledApps(apps)));
-ipcRenderer.on(Events.LATEST_VERSION_FETCHED, (_, { id, latestVersion, isOutdated }: LatestVersionFetchedParam) => store.dispatch(updateLatestVersion(id, latestVersion, isOutdated)));
+const store = createStore<AppState>(appReducer, initialAppState, applyMiddleware(forwardToMain));
+replayActionRenderer(store);
 
 ReactDOM.render(
     <HashRouter>

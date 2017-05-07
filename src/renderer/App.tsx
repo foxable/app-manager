@@ -1,5 +1,3 @@
-/// <reference path="renderer.d.ts"/>
-
 import * as React from "react";
 import {Switch,Route,Redirect,NavLink} from "react-router-dom";
 import {Menu,Icon} from "semantic-ui-react";

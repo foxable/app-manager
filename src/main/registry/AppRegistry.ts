@@ -4,7 +4,7 @@ import * as path from "path";
 
 import Utils from "../Utils";
 
-export default class AppStore
+export default class AppRegistry
 {
     private registeredApps: Promise<RegisteredApp[]> = null;
 

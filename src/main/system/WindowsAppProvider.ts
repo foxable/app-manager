@@ -1,5 +1,5 @@
 /// <reference path="../main.d.ts"/>
-/// <reference path="../../shared.d.ts"/>
+/// <reference path="../../store/store.d.ts"/>
 
 import * as path from "path";
 import {spawn} from "child_process";
