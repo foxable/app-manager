@@ -6,7 +6,7 @@ import {createStore,applyMiddleware} from "redux";
 import {appReducer,initialAppState,forwardToRenderer,replayActionMain} from "../store";
 import createFetchInstalledApps from "./store/middleware/createFetchInstalledApps";
 import AppRegistry from "./registry/AppRegistry";
-import {WindowsAppProvider} from "./system/WindowsAppProvider";
+import WindowsAppProvider from "./system/WindowsAppProvider";
 import Main from "./Main";
 
 // app registry

@@ -1,5 +1,3 @@
-/// <reference path="actions.d.ts"/>
-
 export function requestInstalledApps(): RequestInstalledAppsAction
 {
     return { type: "REQUEST_INSTALLED_APPS" };

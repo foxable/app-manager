@@ -1,9 +1,9 @@
 import {ipcMain} from "electron";
 import {Store} from "redux";
 
-import Events from "../actions/events";
+import {REDUX_SYNC} from "../actions/events";
 
-export default function(store: Store<AppState>): void
+export default function replayActionMain(store: Store<AppState>): void
 {
-    ipcMain.on(Events.REDUX_SYNC, (event, action: Action) => store.dispatch(action));
+    ipcMain.on(REDUX_SYNC, (event, action: AppAction) => store.dispatch(action));
 }

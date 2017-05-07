@@ -1,5 +1,1 @@
-const Events = {
-    REDUX_SYNC: "app:redux-sync"
-};
-
-export default Events;
+export const REDUX_SYNC = "app:redux-sync";

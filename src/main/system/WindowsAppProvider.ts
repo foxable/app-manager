@@ -1,13 +1,10 @@
-/// <reference path="../main.d.ts"/>
-/// <reference path="../../store/store.d.ts"/>
-
 import * as path from "path";
 import {spawn} from "child_process";
 import {app} from "electron";
 
 import Utils from "../Utils";
 
-export class WindowsAppProvider implements SystemAppProvider
+export default class WindowsAppProvider implements SystemAppProvider
 {
     private systemApps: Promise<SystemApp[]> = null;
 

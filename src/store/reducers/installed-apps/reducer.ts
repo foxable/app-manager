@@ -1,7 +1,7 @@
-/// <reference path="../store.d.ts"/>
-/// <reference path="actions.d.ts"/>
-
 import {Reducer} from "redux";
+
+import initialState from "./initialState";
+import initialLatestVersionState from "./initialLatestVersionState";
 
 function requestInstalledApps(state: InstalledAppsState, action: RequestInstalledAppsAction): InstalledAppsState
 {
@@ -16,7 +16,7 @@ function receiveInstalledApps(state: InstalledAppsState, action: ReceiveInstalle
     return {
         ...state,
         isFetching: false,
-        apps: action.payload.apps.map(app => ({ ...app, isFetchingVersion: false }))
+        apps: action.payload.apps.map(app => ({ ...initialLatestVersionState, ...app }))
     };
 }
 
@@ -46,12 +46,7 @@ function receiveLatestVersion(state: InstalledAppsState, action: ReceiveLatestVe
     };
 }
 
-export const initialState: InstalledAppsState = {
-    isFetching: true,
-    apps: []
-};
-
-export const reducer: Reducer<InstalledAppsState> = (state: InstalledAppsState = initialState, action: Action) =>
+const reducer: Reducer<InstalledAppsState> = (state: InstalledAppsState = initialState, action: AppAction) => 
 {
     switch (action.type)
     {
@@ -62,3 +57,5 @@ export const reducer: Reducer<InstalledAppsState> = (state: InstalledAppsState =
         default: return state;
     }
 };
+
+export default reducer;

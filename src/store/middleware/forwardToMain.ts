@@ -1,17 +1,14 @@
-/// <reference path="../store.d.ts"/>
-
 import {ipcRenderer} from "electron";
 import {Middleware,MiddlewareAPI,Dispatch} from "redux";
 
-import Events from "../actions/events";
-import isLocalAction from "../helpers/isLocalAction";
+import {REDUX_SYNC} from "../actions/events";
 
-const forwardToMain: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: Action) =>
+const forwardToMain: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: AppAction) =>
 {
-    if (isLocalAction(action))
+    if (action.scope === "local")
         return next(action);
 
-    ipcRenderer.send(Events.REDUX_SYNC, action);
+    ipcRenderer.send(REDUX_SYNC, action);
 };
 
 export default forwardToMain;

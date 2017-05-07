@@ -1,6 +1,4 @@
-/// <reference path="../main.d.ts"/>
-
-import {HtmlVersionProviderAdapter} from "./HtmlVersionProviderAdapter";
+import HtmlVersionProviderAdapter from "./HtmlVersionProviderAdapter";
 
 export default class VersionProviderFactory
 {

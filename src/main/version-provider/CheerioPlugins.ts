@@ -1,4 +1,4 @@
-export function registerCheerioPlugins($: CheerioStatic): void
+export default function registerCheerioPlugins($: CheerioStatic): void
 {
     $.prototype.contains = function (this: Cheerio, text: string): Cheerio
     {

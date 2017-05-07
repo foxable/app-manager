@@ -1,6 +1,4 @@
-/// <reference path="../store.d.ts"/>
-
-export default function createLocalAction(action: Action): Action
+export default function createLocalAction(action: AppAction): AppAction
 {
-    return { ...action, isLocalScope: true };
+    return { ...action, scope: "local" };
 }

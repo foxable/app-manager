@@ -1,4 +1,4 @@
-import {initialState as installedApps} from "../../installed-apps/reducer";
+import {default as installedApps} from "../installed-apps/initialState";
 
 const initialState: AppState = {
     installedApps

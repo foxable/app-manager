@@ -1,15 +1,13 @@
-/// <reference path="../store.d.ts"/>
-
 import {BrowserWindow} from "electron";
-import {Middleware,MiddlewareAPI,Dispatch,Action} from "redux";
+import {Middleware,MiddlewareAPI,Dispatch} from "redux";
 
-import Events from "../actions/events";
+import {REDUX_SYNC} from "../actions/events";
 import createLocalAction from "../helpers/createLocalAction";
 
-const forwardToRenderer: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: Action) =>
+const forwardToRenderer: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: AppAction) =>
 {
     const openWindows = BrowserWindow.getAllWindows();
-    openWindows.forEach(window => window.webContents.send(Events.REDUX_SYNC, createLocalAction(action)));
+    openWindows.forEach(window => window.webContents.send(REDUX_SYNC, createLocalAction(action)));
 
     return next(action);
 };

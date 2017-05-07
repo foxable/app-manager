@@ -13,7 +13,7 @@ export default function createFetchInstalledApps(appRegistry: AppRegistry, syste
         return { ...app, latestVersion: null, isOutdated: false };
     }
 
-    function fetchInstalledApps(store: MiddlewareAPI<AppState>, action: RequestInstalledAppsAction): Action
+    function fetchInstalledApps(store: MiddlewareAPI<AppState>, action: RequestInstalledAppsAction): AppAction
     {
         Promise.all([systemAppProvider.loadApps(false), appRegistry.loadApps(false)])
             .then(([systemApps, registeredApps]) =>
@@ -30,7 +30,7 @@ export default function createFetchInstalledApps(appRegistry: AppRegistry, syste
         return action;
     }
 
-    function fetchLatestVersion(store: MiddlewareAPI<AppState>, action: RequestLatestVersionAction): Action
+    function fetchLatestVersion(store: MiddlewareAPI<AppState>, action: RequestLatestVersionAction): AppAction
     {
         const app = store.getState().installedApps.apps.find(_ => _.id === action.payload.appId);
         const versionProvider = appRegistry.loadVersionProvider(app.id);
@@ -43,7 +43,7 @@ export default function createFetchInstalledApps(appRegistry: AppRegistry, syste
         return action;       
     }
 
-    const middleware: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: Action) =>
+    const middleware: Middleware = (store: MiddlewareAPI<AppState>) => (next: Dispatch<AppState>) => (action: AppAction) =>
     {
         switch(action.type)
         {

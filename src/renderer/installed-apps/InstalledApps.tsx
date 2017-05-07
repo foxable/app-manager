@@ -61,7 +61,7 @@ export class InstalledApps extends React.Component<InstalledAppsProps, undefined
         return <Message>No installed apps found.</Message>;
     }
 
-    private renderOutdatedWarning(app: InstalledApp): JSX.Element
+    private renderOutdatedWarning(app: InstalledAppState): JSX.Element
     {
         return <Popup
                  trigger={<Icon name="attention"/> }

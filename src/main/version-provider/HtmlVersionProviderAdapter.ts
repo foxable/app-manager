@@ -1,12 +1,10 @@
-/// <reference path="../main.d.ts"/>
-
 import * as http from "http";
 import * as https from "https";
 import * as cheerio from "cheerio";
 
-import {registerCheerioPlugins} from "./CheerioPlugins";
+import registerCheerioPlugins from "./CheerioPlugins";
 
-export class HtmlVersionProviderAdapter implements VersionProviderAdapter
+export default class HtmlVersionProviderAdapter implements VersionProviderAdapter
 {
     public constructor(private readonly versionProvider: HtmlVersionProvider)
     {
