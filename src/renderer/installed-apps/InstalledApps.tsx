@@ -1,17 +1,44 @@
 /// <reference path="../../shared.d.ts"/>
 
-import * as React from "react";
 import {shell} from "electron";
-import {Table,Button,Icon,Popup} from "semantic-ui-react";
+import * as React from "react";
 
-export interface InstalledAppsTableProps
+import {RouteComponentProps} from "react-router-dom";
+import {Segment,Header,Table,Button,Icon,Message,Popup} from "semantic-ui-react";
+
+export interface InstalledAppsProps extends RouteComponentProps<InstalledAppsProps>
 {
+    onLoadApps(): void;
+    isLoading: boolean;
     apps: InstalledApp[];
 }
 
-export class InstalledAppsTable extends React.Component<InstalledAppsTableProps, undefined>
+export class InstalledApps extends React.Component<InstalledAppsProps, undefined>
 {
+    public componentDidMount(): void
+    {
+        this.props.onLoadApps();
+    }
+
     public render(): JSX.Element
+    {
+        return <div className="content">
+                 <Header as="h1" dividing><Icon name="desktop"/> Installed Apps</Header>
+                 <Segment basic loading={this.props.isLoading}>                 
+                   {this.renderApps()}
+                 </Segment>
+               </div>;
+    }
+
+    private renderApps(): JSX.Element
+    {
+        if (this.props.apps.length === 0)
+            return this.renderNoAppsMessage();
+
+        return this.renderAppsTable();
+    }
+
+    private renderAppsTable(): JSX.Element
     {
         return <Table compact basic="very">
                  <Table.Body>
@@ -27,6 +54,11 @@ export class InstalledAppsTable extends React.Component<InstalledAppsTableProps,
                    }
                  </Table.Body>
                </Table>;
+    }
+
+    private renderNoAppsMessage(): JSX.Element
+    {
+        return <Message>No installed apps found.</Message>;
     }
 
     private renderOutdatedWarning(app: InstalledApp): JSX.Element

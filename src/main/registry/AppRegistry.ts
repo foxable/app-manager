@@ -2,9 +2,9 @@
 
 import * as path from "path";
 
-import {Store} from "./Store";
+import Utils from "../Utils";
 
-export class AppStore
+export default class AppStore
 {
     private registeredApps: Promise<RegisteredApp[]> = null;
 
@@ -16,7 +16,7 @@ export class AppStore
     {
         if (this.registeredApps == null || forceReload)
         {
-            this.registeredApps = Store.readJsonFiles<AppDescription>(this.appsPath, appId => this.loadApp(appId));
+            this.registeredApps = Utils.readJsonFiles<AppDescription>(this.appsPath, appId => this.loadApp(appId));
         }
 
         return this.registeredApps;
@@ -24,7 +24,7 @@ export class AppStore
 
     public loadApp(appId: string): Promise<RegisteredApp>
     {
-        return Store.readJsonFile<AppDescription>(this.getAppPath("app.json", appId))
+        return Utils.readJsonFile<AppDescription>(this.getAppPath("app.json", appId))
             .then(app => ({ ...app, id: appId }));
     }
 

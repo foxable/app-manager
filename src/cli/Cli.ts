@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as program from "commander";
-import {AppStore} from "../main/store/AppStore";
+import AppRegistry from "../main/registry/AppRegistry";
 import {VersionProviderFactory} from "../main/version-provider/VersionProviderFactory";
 
-const appStore = new AppStore(path.join(__dirname, "..", "..", "..", "storage", "apps"));
+const appRegistry = new AppRegistry(path.join(__dirname, "..", "..", "..", "storage", "apps"));
 
 function toTimeDiff(tStart: [number, number]): string
 {
@@ -17,7 +17,7 @@ function toTimeDiff(tStart: [number, number]): string
 function getLatestVersion(appId: string): void
 {
     const tStart = process.hrtime();
-    const versionProvider = appStore.loadVersionProvider(appId);    
+    const versionProvider = appRegistry.loadVersionProvider(appId);    
     
     VersionProviderFactory.create(versionProvider).getVersion()
         .then(version => console.log(`${version} | ${toTimeDiff(tStart)}`))

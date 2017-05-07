@@ -12,3 +12,17 @@ declare interface InstalledApp extends RegisteredApp
     readonly latestVersion: string | null;
     readonly isOutdated: boolean;
 }
+
+// Event Parameters
+declare interface FetchInstalledAppsParam 
+{    
+}
+
+declare type InstalledAppsFetchedParam = InstalledApp[];
+
+declare interface LatestVersionFetchedParam
+{
+    id: string;
+    latestVersion: string;
+    isOutdated: boolean;
+}

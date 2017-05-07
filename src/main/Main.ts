@@ -4,8 +4,8 @@ import * as url from "url";
 import * as path from "path";
 import {BrowserWindow,ipcMain} from "electron";
 
-import {mainEvents,rendererEvents} from "../events";
-import {AppStore} from "./store/AppStore";
+import Events from "../events";
+import AppRegistry from "./registry/AppRegistry";
 import {WindowsAppProvider} from "./system/WindowsAppProvider";
 import {VersionProviderFactory} from "./version-provider/VersionProviderFactory";
 import VersionComparer from "./VersionComparer";
@@ -17,16 +17,16 @@ export default class Main
     private static app: Electron.App;
     public static BrowserWindow: typeof BrowserWindow;
 
-    private static appStore: AppStore;
+    private static appRegistry: AppRegistry;
     private static systemAppProvider: SystemAppProvider;
 
     public static main(app: Electron.App, browserWindow: typeof BrowserWindow)
     {
         Main.BrowserWindow = browserWindow;
-        Main.app = app;
-        // init app store
+        Main.app = app;        
+        // init registry
         const appsPath = path.join(Main.app.getAppPath(), "storage", "apps");
-        Main.appStore = new AppStore(appsPath);
+        Main.appRegistry = new AppRegistry(appsPath);
         // init system app provider
         Main.systemAppProvider = new WindowsAppProvider();
 
@@ -38,13 +38,11 @@ export default class Main
         Main.app.on("window-all-closed", Main.onWindowAllClosed);
         Main.app.on("activate", Main.onActivate);
         // register renderer messages
-        ipcMain.on(mainEvents.loadRegisteredApps, Main.onLoadRegisteredApps);
-        ipcMain.on(mainEvents.loadInstalledApps, Main.onLoadInstalledApps);
+        ipcMain.on(Events.FETCH_INSTALLED_APPS, Main.onLoadInstalledApps);
     }
 
     private static onReady(): void
     {
-        Main.BrowserWindow.removeDevToolsExtension("fmkadmapgofadopljbjfkapdkoienihi");
         // Create the browser window.
         Main.mainWindow = new Main.BrowserWindow({width: 800, height: 600});
         // and load the index.html of the app.
@@ -83,22 +81,17 @@ export default class Main
 
     private static onLoadInstalledApps(event: Electron.IpcMainEvent): void
     {
-        Promise.all([Main.systemAppProvider.loadApps(false), Main.appStore.loadApps(false)])
+        Promise.all([Main.systemAppProvider.loadApps(false), Main.appRegistry.loadApps(false)])
             .then(([systemApps, registeredApps]) =>
             {
                 const installedApps = Utils
                     .joinBy(systemApps, registeredApps, (s, r) => Utils.contains(s.name, r.name))
                     .map(app => Main.initApp(app));
 
-                event.sender.send(rendererEvents.installedAppsLoaded, installedApps);
+                event.sender.send(Events.INSTALLED_APPS_FETCHED, <InstalledAppsFetchedParam>installedApps);
                 // lazily load latest version
                 installedApps.forEach(app => Main.loadLatestVersion(event, app));  
             });
-    }
-
-    private static onLoadRegisteredApps(event: Electron.IpcMainEvent): void
-    {
-        Main.appStore.loadApps(false).then(apps => event.sender.send(rendererEvents.registeredAppsLoaded, apps));
     }
 
     private static initApp(app: SystemApp & RegisteredApp): InstalledApp
@@ -108,11 +101,11 @@ export default class Main
 
     private static loadLatestVersion(event: Electron.IpcMainEvent, app: InstalledApp): void
     {
-        const versionProvider = Main.appStore.loadVersionProvider(app.id);
+        const versionProvider = Main.appRegistry.loadVersionProvider(app.id);
         VersionProviderFactory.create(versionProvider).getVersion().then(latestVersion =>
         {
             const isOutdated = new VersionComparer(app.installedVersion).isLesserThan(latestVersion);
-            event.sender.send(rendererEvents.installedAppUpdated, { ...app, latestVersion, isOutdated });
+            event.sender.send(Events.LATEST_VERSION_FETCHED, <LatestVersionFetchedParam>{ id: app.id, latestVersion, isOutdated });
         });            
     }
 }

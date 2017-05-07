@@ -1,12 +1,8 @@
-export const mainEvents =
+const events =
 {
-    loadInstalledApps: "app-manager:load-installed-apps",
-    loadRegisteredApps: "app-manager:load-registered-apps",
+    FETCH_INSTALLED_APPS: "app:fetch-installed-apps",
+    INSTALLED_APPS_FETCHED: "app:installed-apps-fetched",
+    LATEST_VERSION_FETCHED: "app:latest-version-fetched"
 };
 
-export const rendererEvents =
-{
-    installedAppsLoaded: "app-manager:installed-apps-loaded",
-    registeredAppsLoaded: "app-manager:registered-apps-loaded",
-    installedAppUpdated: "app-manager:installed-app-updated"
-};
+export default events;
