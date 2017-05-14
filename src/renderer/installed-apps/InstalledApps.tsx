@@ -44,7 +44,7 @@ export class InstalledApps extends React.Component<InstalledAppsProps, undefined
                </Table>;
     }
 
-    private renderApp(app: InstalledAppState): JSX.Element
+    private renderApp(app: InstalledApp): JSX.Element
     {
         return <Table.Row key={app.id} warning={app.isOutdated}>
                  <Table.Cell>{app.name}</Table.Cell>
@@ -61,7 +61,7 @@ export class InstalledApps extends React.Component<InstalledAppsProps, undefined
         return <Message>No installed apps found.</Message>;
     }
 
-    private renderOutdatedWarning(app: InstalledAppState): JSX.Element
+    private renderOutdatedWarning(app: InstalledApp): JSX.Element
     {
         return <Popup
                  trigger={<Icon name="attention"/> }

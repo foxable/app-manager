@@ -6,22 +6,29 @@ declare interface RegisteredApp
     readonly downloadUrl: string;    
 }
 
-declare interface InstalledApp extends RegisteredApp
+declare interface SystemApp
 {
-    readonly installedVersion: string;    
+    readonly name: string;
+    readonly installedVersion: string;
 }
 
 // States
 declare interface AppState
 {
+    registeredApps: RegisteredAppsState;
+    systemApps: SystemAppsState;
     installedApps: InstalledAppsState;
 }
 
-declare interface InstalledAppsState
+declare interface AppListState<T>
 {
     isFetching: boolean;
-    apps: InstalledAppState[];
+    apps: T[];
 }
+
+type RegisteredAppsState = AppListState<RegisteredApp>;
+type SystemAppsState = AppListState<SytemApp>;
+type InstalledAppsState = AppListState<InstalledApp>;
 
 declare interface LatestVersionState
 {
@@ -30,8 +37,8 @@ declare interface LatestVersionState
     readonly isOutdated: boolean;
 }
 
-declare interface InstalledAppState extends InstalledApp, LatestVersionState
-{    
+declare interface InstalledApp extends RegisteredApp, SystemApp, LatestVersionState
+{
 }
 
 // Actions
@@ -41,6 +48,35 @@ declare interface AppAction
     scope?: "local";
 }
 
+// Registered Apps
+declare interface RequestRegisteredAppsAction extends AppAction
+{
+    type: "REQUEST_REGISTERED_APPS";
+}
+
+declare interface ReceiveRegisteredAppsAction extends AppAction
+{
+    type: "RECEIVE_REGISTERED_APPS";
+    payload: {
+        apps: RegisteredApp[];
+    };
+}
+
+// System Apps
+declare interface RequestSystemAppsAction extends AppAction
+{
+    type: "REQUEST_SYSTEM_APPS";
+}
+
+declare interface ReceiveSystemAppsAction extends AppAction
+{
+    type: "RECEIVE_SYSTEM_APPS";
+    payload: {
+        apps: SystemApp[];
+    };
+}
+
+// Installed Apps
 declare interface RequestInstalledAppsAction extends AppAction
 {
     type: "REQUEST_INSTALLED_APPS";
@@ -50,10 +86,11 @@ declare interface ReceiveInstalledAppsAction extends AppAction
 {
     type: "RECEIVE_INSTALLED_APPS";
     payload: {
-        apps: InstalledApp[];
+        apps: (RegisteredApp & SystemApp)[];
     };
 }
 
+// Latest Version
 declare interface RequestLatestVersionAction extends AppAction
 {
     type: "REQUEST_LATEST_VERSION";

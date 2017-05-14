@@ -2,23 +2,11 @@ import * as path from "path";
 import {spawn} from "child_process";
 import {app} from "electron";
 
-import Utils from "../Utils";
+import {parseJson} from "../utils/fileSystem";
 
 export default class WindowsAppProvider implements SystemAppProvider
 {
-    private systemApps: Promise<SystemApp[]> = null;
-
-    public loadApps(forceReload: boolean): Promise<SystemApp[]>
-    {
-        if (this.systemApps == null || forceReload)
-        {
-            this.systemApps = this.reloadApps();
-        }
-
-        return this.systemApps;
-    }
-
-    private reloadApps(): Promise<SystemApp[]>
+    public async loadApps(): Promise<SystemApp[]>
     {
         return new Promise<SystemApp[]>((resolve, reject) =>
         {
@@ -29,7 +17,7 @@ export default class WindowsAppProvider implements SystemAppProvider
 
             child.stdout.on("data", data => result += data.toString());
             child.stderr.on("data", data => reject(`Error while loading system apps: ${data}`));
-            child.on("exit", () => resolve(Utils.parseJson<SystemApp[]>(result)));
+            child.on("exit", () => resolve(parseJson<SystemApp[]>(result)));
             child.stdin.end();
         });
     }

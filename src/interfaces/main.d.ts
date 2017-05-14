@@ -5,15 +5,9 @@ declare interface AppDescription
     readonly downloadUrl: string;    
 }
 
-declare interface SystemApp
-{
-    readonly name: string;
-    readonly installedVersion: string;
-}
-
 declare interface SystemAppProvider
 {
-    loadApps(forceReload: boolean): Promise<SystemApp[]>;
+    async loadApps(): Promise<SystemApp[]>;
 }
 
 declare type VersionProvider = HtmlVersionProvider;

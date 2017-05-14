@@ -1,15 +1,22 @@
 // actions
+export * from "./actions/registered-apps";
+export * from "./actions/system-apps";
 export * from "./actions/installed-apps";
 
 // reducer
-export {default as appReducer} from "./reducers/app/reducer";
-export {default as initialAppState} from "./reducers/app/initialState";
+export * from "./reducers/app";
+export {default as initialAppState} from "./reducers/initial-state/app";
 
 // middleware
-export {default as forwardToMain} from "./middleware/forwardToMain";
-export {default as forwardToRenderer} from "./middleware/forwardToRenderer";
+export * from "./middleware/forwardToMain";
+export * from "./middleware/forwardToRenderer";
+
+export * from "./middleware/fetchRegisteredApps";
+export * from "./middleware/fetchSystemApps";
+export * from "./middleware/fetchInstalledApps";
+export * from "./middleware/joinRegisteredAppsWithSystemApps";
 
 // helpers
-export {default as replayActionMain} from "./helpers/replayActionMain";
-export {default as replayActionRenderer} from "./helpers/replayActionRenderer";
-export {default as createLocalAction} from "./helpers/createLocalAction";
+export {replayActionMain} from "./helpers/replayActionMain";
+export {replayActionRenderer} from "./helpers/replayActionRenderer";
+export {createLocalAction} from "./helpers/createLocalAction";

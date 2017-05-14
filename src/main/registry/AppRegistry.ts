@@ -1,29 +1,24 @@
 import * as path from "path";
 
-import Utils from "../Utils";
+import {readDir,readFile,parseJson} from "../utils/fileSystem";
 
 export default class AppRegistry
 {
-    private registeredApps: Promise<RegisteredApp[]> = null;
-
     public constructor(private appsPath: string)
     {
     }
 
-    public loadApps(forceReload: boolean): Promise<RegisteredApp[]>
+    public loadApps(): Promise<RegisteredApp[]>
     {
-        if (this.registeredApps == null || forceReload)
-        {
-            this.registeredApps = Utils.readJsonFiles<AppDescription>(this.appsPath, appId => this.loadApp(appId));
-        }
-
-        return this.registeredApps;
+        return readDir(this.appsPath)
+            .then(files => Promise.all(files.map(appId => this.loadApp(appId))));
     }
 
-    public loadApp(appId: string): Promise<RegisteredApp>
+    private loadApp(appId: string): Promise<RegisteredApp>
     {
-        return Utils.readJsonFile<AppDescription>(this.getAppPath("app.json", appId))
-            .then(app => ({ ...app, id: appId }));
+        return readFile(this.getAppPath("app.json", appId))
+            .then(fileContents => parseJson<AppDescription>(fileContents))
+            .then(appDescription => ({ ...appDescription, id: appId }));
     }
 
     public loadVersionProvider(appId: string): VersionProvider
